@@ -64,7 +64,7 @@ const About = () => {
     {
       name: 'KELVIN JOHNSON',
       role: 'CTO',
-      image: <img src='estate-riders-app/public/images/kev.jpg' alt='Kelvin' />,
+      image: <img src='/images/kev.jpg' alt='Kelvin' className="w-24 h-24 rounded-full object-cover" />,
       bio: 'Tech innovator and cycling enthusiast'
     },
     {
@@ -271,11 +271,5 @@ const About = () => {
       </section>
     </div>
   );
-<<<<<<< HEAD
 };
-
 export default About;
-=======
-}
-export default About;
->>>>>>> origin/kelvin
