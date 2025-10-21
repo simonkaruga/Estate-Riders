@@ -271,6 +271,11 @@ const About = () => {
       </section>
     </div>
   );
+<<<<<<< HEAD
 };
 
 export default About;
+=======
+}
+export default About;
+>>>>>>> origin/kelvin
