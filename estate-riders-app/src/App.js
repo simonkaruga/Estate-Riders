@@ -1,23 +1,27 @@
-import React, { useState } from "react";
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
 import NavBar from "./components/NavBar";
+import About from "./pages/About";
+import Catalog from "./pages/Catalog";
+import Home from "./pages/Home";
+import ItemDetails from "./pages/ItemDetails";
+import HireForm from "./components/HireForm";
 
 function App() {
-  const [route, setRoute] = useState("home");
-
   return (
     <div>
-      <NavBar
-        currentRoute={route}
-        navigate={setRoute}
-        user={{ username: "Simon" }}
-        onLogout={() => alert("Logged out")}
-      />
+      <NavBar />
 
       <main className="p-4">
-        {route === "home" && <p>🏠 Welcome to Estate Riders!</p>}
-        {route === "add" && <p>➕ Add a new item.</p>}
-        {route === "hire" && <p>🛵 Hire a bike or scooter.</p>}
-        {route === "rentals" && <p>📦 View your rentals.</p>}
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/catalog" element={<Catalog />} />
+          <Route path="/catalog/:id" element={<ItemDetails />} />
+          <Route path="/hire" element={<HireForm />} />
+          <Route path="/home" element={<Navigate to="/" replace />} />
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
       </main>
     </div>
   );
