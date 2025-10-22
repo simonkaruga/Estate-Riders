@@ -1,24 +1,12 @@
-import React, { useState } from "react";
-import NavBar from "./components/NavBar";
+import React from "react";
+import Navbar from "./components/Navbar";
+import About from "./components/About";
 
 function App() {
-  const [route, setRoute] = useState("home");
-
   return (
-    <div>
-      <NavBar
-        currentRoute={route}
-        navigate={setRoute}
-        user={{ username: "Simon" }}
-        onLogout={() => alert("Logged out")}
-      />
-
-      <main className="p-4">
-        {route === "home" && <p>🏠 Welcome to Estate Riders!</p>}
-        {route === "add" && <p>➕ Add a new item.</p>}
-        {route === "hire" && <p>🛵 Hire a bike or scooter.</p>}
-        {route === "rentals" && <p>📦 View your rentals.</p>}
-      </main>
+    <div className="App">
+      <Navbar />
+      <About />
     </div>
   );
 }
