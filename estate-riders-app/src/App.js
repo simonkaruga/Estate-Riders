@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
 import About from './pages/About';
 import LogIn from './pages/LogIn';
+import HireForm from './components/HireForm';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -21,7 +22,7 @@ function App() {
 
       const user = users[0];
       if (user.password !== userData.password) {
-        throw new Error('Invalid password');
+        throw new Error('Invalid password or email');
       }
 
       // Remove password from user object before storing in state
@@ -69,6 +70,10 @@ function App() {
           <Route
             path="/login"
             element={user ? <Navigate to="/about" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/hire"
+            element={user ? <HireForm /> : <Navigate to="/login" />}
           />
         </Routes>
       </main>

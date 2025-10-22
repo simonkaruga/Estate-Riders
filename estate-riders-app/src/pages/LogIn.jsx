@@ -14,9 +14,16 @@ const LogIn = ({ onLogin }) => {
     }
 
     try {
+      // Check if user already exists for signup
       if (isSignup) {
+        const checkUser = await fetch(`http://localhost:3001/users?email=${encodeURIComponent(email)}`);
+        const existingUsers = await checkUser.json();
+        
+        if (existingUsers.length > 0) {
+          throw new Error('User with this email already exists');
+        }
         // Handle signup
-        const response = await fetch('http://localhost:3000/users', {
+        const response = await fetch('http://localhost:3001/users', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -25,11 +32,16 @@ const LogIn = ({ onLogin }) => {
             email,
             password,
             name: email.split('@')[0],
+            totalBookings: 0,
+            totalSpent: 0,
+            status: 'active',
+            joinDate: new Date().toISOString().split('T')[0],
           }),
         });
 
         if (!response.ok) {
-          throw new Error('Signup failed');
+          const error = await response.text();
+          throw new Error(error || 'Signup failed');
         }
 
         alert('Signup successful! Please log in.');

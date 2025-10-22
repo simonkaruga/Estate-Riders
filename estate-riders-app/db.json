@@ -1,18 +1,112 @@
 {
   "users": [
     {
-      "id": 1,
-      "email": "simon@estate-riders.com",
-      "password": "simon123",
-      "name": "Simon Mwangi",
-      "role": "admin"
+      "id": "1",
+      "name": "John Doe",
+      "email": "john@example.com",
+      "phone": "+254712345678",
+      "password": "password123",
+      "totalBookings": 15,
+      "totalSpent": 450,
+      "status": "active",
+      "joinDate": "2024-01-15"
     },
     {
-      "id": 2,
-      "email": "kelvin@estate-riders.com",
-      "password": "kelvin123",
-      "name": "Kelvin Johnson",
-      "role": "admin"
+      "id": "e7d3",
+      "email": "kev@gmail.com",
+      "password": "123",
+      "name": "kev",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-22"
     }
-  ]
+  ],
+  "vehicles": [
+    {
+      "id": "1",
+      "name": "Electric Mountain Bike",
+      "type": "bike",
+      "price": 15,
+      "rating": 4.8,
+      "image": "🚴",
+      "specs": {
+        "range": "50km",
+        "speed": "25km/h",
+        "weight": "22kg"
+      },
+      "available": true
+    },
+    {
+      "id": "2",
+      "name": "City E-Bike",
+      "type": "bike",
+      "price": 12,
+      "rating": 4.6,
+      "image": "🚲",
+      "specs": {
+        "range": "40km",
+        "speed": "20km/h",
+        "weight": "18kg"
+      },
+      "available": true
+    },
+    {
+      "id": "3",
+      "name": "Pro Electric Scooter",
+      "type": "scooter",
+      "price": 10,
+      "rating": 4.7,
+      "image": "🛴",
+      "specs": {
+        "range": "35km",
+        "speed": "25km/h",
+        "weight": "14kg"
+      },
+      "available": true
+    },
+    {
+      "id": "4",
+      "name": "Urban Scooter",
+      "type": "scooter",
+      "price": 8,
+      "rating": 4.5,
+      "image": "🛴",
+      "specs": {
+        "range": "25km",
+        "speed": "20km/h",
+        "weight": "12kg"
+      },
+      "available": false
+    },
+    {
+      "id": "5",
+      "name": "Electric Roller Skates",
+      "type": "skates",
+      "price": 7,
+      "rating": 4.4,
+      "image": "⛸️",
+      "specs": {
+        "range": "15km",
+        "speed": "15km/h",
+        "weight": "3kg"
+      },
+      "available": true
+    },
+    {
+      "id": "6",
+      "name": "Pro Inline Skates",
+      "type": "skates",
+      "price": 9,
+      "rating": 4.6,
+      "image": "🛼",
+      "specs": {
+        "range": "20km",
+        "speed": "18km/h",
+        "weight": "3.5kg"
+      },
+      "available": true
+    }
+  ],
+  "bookings": []
 }
