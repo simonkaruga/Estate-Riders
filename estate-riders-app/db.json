@@ -1,0 +1,18 @@
+{
+  "users": [
+    {
+      "id": 1,
+      "email": "simon@estate-riders.com",
+      "password": "simon123",
+      "name": "Simon Mwangi",
+      "role": "admin"
+    },
+    {
+      "id": 2,
+      "email": "kelvin@estate-riders.com",
+      "password": "kelvin123",
+      "name": "Kelvin Johnson",
+      "role": "admin"
+    }
+  ]
+}
