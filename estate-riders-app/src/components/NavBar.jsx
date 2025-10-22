@@ -16,42 +16,39 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-md fixed w-full z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16 items-center">
-          {/* Logo */}
-          <div className="flex items-center">
-            <Zap className="text-emerald-600 mr-2" size={28} />
-            <span className="font-bold text-xl text-gray-800">Estate Riders</span>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 flex justify-between h-16 items-center">
+        {/* Logo */}
+        <div className="flex items-center cursor-pointer">
+          <Zap className="text-emerald-600 mr-2" size={28} />
+          <span className="font-bold text-xl text-gray-800">Estate Riders</span>
+        </div>
 
-          {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-8 items-center">
-            {menuItems.map((item) => (
-              <Link
-                key={item.to}
-                to={item.to}
-                smooth={true}
-                duration={500}
-                className="cursor-pointer text-gray-700 hover:text-emerald-600 font-medium"
-              >
-                {item.name}
-              </Link>
-            ))}
-          </div>
-
-          {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center">
-            <button
-              onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-emerald-600 focus:outline-none focus:ring-2 focus:ring-emerald-500 rounded"
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-8 items-center">
+          {menuItems.map((item) => (
+            <Link
+              key={item.to}
+              to={item.to}
+              smooth={true}
+              duration={500}
+              spy={true}
+              offset={-80} // adjust for fixed navbar
+              className="cursor-pointer text-gray-700 hover:text-emerald-600 font-medium"
+              activeClass="text-emerald-600 border-b-2 border-emerald-600"
             >
-              {isOpen ? (
-                <span className="text-2xl font-bold">&times;</span>
-              ) : (
-                <span className="text-2xl font-bold">&#9776;</span>
-              )}
-            </button>
-          </div>
+              {item.name}
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-gray-700 hover:text-emerald-600 focus:outline-none"
+          >
+            {isOpen ? <span className="text-2xl">&times;</span> : <span className="text-2xl">&#9776;</span>}
+          </button>
         </div>
       </div>
 
