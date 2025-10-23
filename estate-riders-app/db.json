@@ -20,6 +20,17 @@
       "totalSpent": 0,
       "status": "active",
       "joinDate": "2025-10-22"
+    },
+    {
+      "id": "fa3d",
+      "email": "simon@gmail.com",
+      "password": "254",
+      "name": "simon",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-23",
+      "role": "user"
     }
   ],
   "vehicles": [
