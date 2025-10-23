@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import VehicleCard from "../components/ItemCard";
-import BookingForm from "../components/HireForm";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from 'react';
+import ItemCard from '../components/ItemCard';
+import HireForm from '../components/HireForm';
 
 const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
   const [filter, setFilter] = useState("all");
@@ -37,73 +36,26 @@ const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {tabs.map((tab) => (
-            <button
-              key={tab.value}
-              onClick={() => setFilter(tab.value)}
-              className={`flex items-center gap-2 px-6 py-3 rounded-full text-base font-medium transition-all duration-200 shadow-sm ${
-                filter === tab.value
-                  ? "bg-emerald-600 text-white shadow-md scale-105"
-                  : "bg-white text-gray-700 hover:bg-emerald-100"
-              }`}
-            >
-              <span className="text-xl">{tab.icon}</span>
-              {tab.label}
-            </button>
+      {/* Main Grid */}
+      <div className="grid lg:grid-cols-3 gap-8">
+        {/* Vehicle List */}
+        <div className="lg:col-span-2 space-y-4">
+          {filteredVehicles.map((vehicle) => (
+            <ItemCard
+              key={vehicle.id}
+              vehicle={vehicle}
+              isSelected={selectedVehicle?.id === vehicle.id}
+              onSelect={setSelectedVehicle}
+            />
           ))}
         </div>
 
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-3 gap-10">
-          {/* Vehicle List */}
-          <div className="lg:col-span-2 space-y-6">
-            <AnimatePresence mode="wait">
-              {filteredVehicles.length > 0 ? (
-                filteredVehicles.map((vehicle) => (
-                  <motion.div
-                    key={vehicle.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <VehicleCard
-                      vehicle={vehicle}
-                      isSelected={selectedVehicle?.id === vehicle.id}
-                      onSelect={() => setSelectedVehicle(vehicle)}
-                    />
-                  </motion.div>
-                ))
-              ) : (
-                <div className="text-center bg-white rounded-2xl shadow p-10">
-                  <h3 className="text-xl font-semibold text-gray-700 mb-2">
-                    No vehicles available
-                  </h3>
-                  <p className="text-gray-500">
-                    Try a different category or check back later.
-                  </p>
-                </div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* Booking Form */}
-          <div className="lg:col-span-1">
-            <motion.div
-              key={selectedVehicle ? selectedVehicle.id : "none"}
-              initial={{ opacity: 0, x: 40 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.4 }}
-              className="bg-white rounded-2xl shadow-lg p-6 sticky top-8"
-            >
-              <BookingForm
-                selectedVehicle={selectedVehicle}
-                onBookingConfirmed={handleBookingConfirmed}
-              />
-            </motion.div>
-          </div>
+        {/* Booking Form */}
+        <div className="lg:col-span-1">
+          <HireForm
+            selectedVehicle={selectedVehicle}
+            onBookingConfirmed={handleBookingConfirmed}
+          />
         </div>
       </div>
     </div>
