@@ -1,26 +1,97 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import About from "./pages/About";
-import Catalog from "./pages/Catalog";
-import Home from "./pages/Home";
-import ItemDetails from "./pages/ItemDetails";
-import HireForm from "./components/HireForm";
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import LogIn from './pages/LogIn';
+import About from './pages/About';
+import Navbar from './components/NavBar';
+import HireForm from './components/HireForm';
+import HomePage from './pages/Home';
 
 function App() {
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  const handleUserLogin = async (userData) => {
+    try {
+      // Check if user exists
+      const response = await fetch(
+        `http://localhost:3001/users?email=${encodeURIComponent(userData.email)}`
+      );
+      const users = await response.json();
+
+      if (users.length === 0) {
+        throw new Error('User not found');
+      }
+
+      const user = users[0];
+      if (user.password !== userData.password) {
+        throw new Error('Invalid password or email');
+      }
+
+      // Remove password from user object before storing in state
+      const { password, ...userWithoutPassword } = user;
+      setUser(userWithoutPassword);
+
+      // ✅ Navigate to Navbar first after successful login
+      navigate('/navbar');
+    } catch (error) {
+      console.error('Login error:', error);
+      alert(error.message || 'Login failed. Please try again.');
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    navigate('/login');
+  };
+
   return (
     <div>
-      <NavBar />
+      {/* Header with user info and logout */}
+      {user && (
+        <header className="bg-emerald-500 text-white p-4 shadow-md">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <span>Welcome, {user.name}!</span>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-emerald-600 rounded hover:bg-emerald-700 transition"
+            >
+              Logout
+            </button>
+          </div>
+        </header>
+      )}
 
-      <main className="p-4">
+      <main className={user ? 'pt-4' : ''}>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/catalog" element={<Catalog />} />
-          <Route path="/catalog/:id" element={<ItemDetails />} />
-          <Route path="/hire" element={<HireForm />} />
-          <Route path="/home" element={<Navigate to="/" replace />} />
-          <Route path="*" element={<Navigate to="/" replace />} />
+          {/* Default route redirects depending on login state */}
+          <Route
+            path="/"
+            element={user ? <Navigate to="/home" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/home" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/home"
+            element={user ? <Navbar /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/navbar"
+            element={user ? <Navbar /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/home"
+            element={user ? <HomePage /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/about"
+            element={user ? <About /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/hire"
+            element={user ? <HireForm /> : <Navigate to="/login" />}
+          />
         </Routes>
       </main>
     </div>
