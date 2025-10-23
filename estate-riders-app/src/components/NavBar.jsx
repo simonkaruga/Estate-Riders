@@ -1,5 +1,5 @@
 import React from "react";
-import { Home, Plus, ShoppingCart, Package, LogOut, Bike } from "lucide-react";clear
+import { Home, Plus, ShoppingCart, Package, LogOut, Bike } from "lucide-react";
 function NavBar({ currentRoute, navigate, user, onLogout }) {
   return (
     <header className="bg-blue-600 text-white p-4 flex flex-col md:flex-row md:items-center md:justify-between">
