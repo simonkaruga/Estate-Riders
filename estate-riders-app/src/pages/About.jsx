@@ -56,7 +56,7 @@ const About = () => {
 
   const team = [
     {
-      name: 'SIMON MWANGI',
+      name: 'SIMON KARUGA',
       role: 'Founder & CEO',
       image: '👩‍💼',
       bio: '10+ years in sustainable mobility'
@@ -68,13 +68,13 @@ const About = () => {
       bio: 'Tech innovator and cycling enthusiast'
     },
     {
-      name: 'Emily Rodriguez',
+      name: 'PRINCE KIBALI',
       role: 'Head of Operations',
       image: '👩‍🔧',
       bio: 'Expert in fleet management'
     },
     {
-      name: 'David Okonkwo',
+      name: 'CHRIS KABUE',
       role: 'Customer Success Lead',
       image: '👨‍💼',
       bio: 'Passionate about customer experience'

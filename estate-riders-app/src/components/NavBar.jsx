@@ -1,41 +1,72 @@
-import React from "react";
-import { Home, Plus, ShoppingCart, Package, LogOut, Bike } from "lucide-react";
-function NavBar({ currentRoute, navigate, user, onLogout }) {
+import React, { useState } from "react";
+import { NavLink } from 'react-router-dom';
+import { Zap } from "lucide-react";
+const Navbar = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const menuItems = [
+    { name: "Home", to: "/" },
+    { name: "About", to: "/about" },
+    { name: "Hire", to: "/hire" },
+    { name: "Login", to: "/login" },
+  ];
+
   return (
-    <header className="bg-blue-600 text-white p-4 flex flex-col md:flex-row md:items-center md:justify-between">
-      <div className="flex items-center gap-2 mb-2 md:mb-0">
-        <Bike size={24} />
-        <h1 className="text-xl font-bold">Estate Riders</h1>
+    <div>
+      <nav className="bg-white shadow-md fixed w-full z-50">
+      <div className="max-w-7xl mx-auto px-4 flex justify-between h-16 items-center">
+        {/* Logo */}
+        <div className="flex items-center cursor-pointer">
+          <Zap className="text-emerald-600 mr-2" size={28} />
+          <span className="font-bold text-xl text-gray-800">Estate Riders</span>
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex space-x-8 items-center">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              className={({ isActive }) =>
+                `cursor-pointer text-gray-700 hover:text-emerald-600 font-medium ${
+                  isActive ? 'text-emerald-600 border-b-2 border-emerald-600' : ''
+                }`
+              }
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="md:hidden flex items-center">
+          <button
+            onClick={() => setIsOpen(!isOpen)}
+            className="text-gray-700 hover:text-emerald-600 focus:outline-none"
+          >
+            {isOpen ? <span className="text-2xl">×</span> : <span className="text-2xl">☰</span>}
+          </button>
+        </div>
       </div>
 
-      <nav className="flex gap-2 flex-wrap">
-        <NavButton label="Home" icon={<Home size={16} />} active={currentRoute === "home"} onClick={() => navigate("home")} />
-        <NavButton label="Add" icon={<Plus size={16} />} active={currentRoute === "add"} onClick={() => navigate("add")} />
-        <NavButton label="Hire" icon={<ShoppingCart size={16} />} active={currentRoute === "hire"} onClick={() => navigate("hire")} />
-        <NavButton label="My Rentals" icon={<Package size={16} />} active={currentRoute === "rentals"} onClick={() => navigate("rentals")} />
-      </nav>
-
-      <button
-        onClick={onLogout}
-        className="mt-2 md:mt-0 flex items-center gap-1 bg-red-500 hover:bg-red-600 px-3 py-1 rounded"
-      >
-        <LogOut size={16} /> Logout
-      </button>
-    </header>
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden bg-white shadow-lg">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.to}
+              to={item.to}
+              onClick={() => setIsOpen(false)}
+              className="block px-4 py-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 cursor-pointer"
+            >
+              {item.name}
+            </NavLink>
+          ))}
+        </div>
+      )}
+    </nav>
+  </div>
   );
-}
+};
 
-function NavButton({ label, icon, active, onClick }) {
-  return (
-    <button
-      onClick={onClick}
-      className={`flex items-center gap-1 px-3 py-1 rounded ${
-        active ? "bg-white text-blue-600 font-semibold" : "hover:bg-blue-500"
-      }`}
-    >
-      {icon} {label}
-    </button>
-  );
-}
-
-export default NavBar;
+export default Navbar;

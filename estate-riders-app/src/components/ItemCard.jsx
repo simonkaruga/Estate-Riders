@@ -1,8 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Zap, Battery, Clock, MapPin } from "lucide-react";
+import {  Battery, Clock, MapPin } from "lucide-react";
 
-const VehicleCard = ({ vehicle, isSelected, onSelect }) => {
+const ItemCard = ({ vehicle, isSelected, onSelect }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.02 }}
@@ -66,4 +66,4 @@ const VehicleCard = ({ vehicle, isSelected, onSelect }) => {
   );
 };
 
-export default VehicleCard;
+export default ItemCard;
