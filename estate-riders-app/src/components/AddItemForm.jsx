@@ -1,4 +1,3 @@
-// src/components/AddItemForm.jsx
 import React, { useState, useEffect } from "react";
 import { Save, X } from "lucide-react";
 

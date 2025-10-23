@@ -70,7 +70,7 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
       ) : (
         <AnimatePresence mode="wait">
           {submitted ? (
-            // ✅ Confirmation State
+            // Confirmation State
             <motion.div
               key="success"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -86,11 +86,11 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
                 Booking Confirmed!
               </h3>
               <p className="text-gray-600">
-                Your {selectedVehicle.name} is ready for you. 🎉
+                Your {selectedVehicle.name} is ready for you.
               </p>
             </motion.div>
           ) : (
-            // 🧾 Booking Form
+            //  Booking Form
             <motion.div
               key="form"
               initial={{ opacity: 0 }}
@@ -214,7 +214,7 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
                   animate={{ opacity: 1 }}
                   className="text-red-600 text-sm font-medium"
                 >
-                  ⚠️ {error}
+                   {error}
                 </motion.div>
               )}
 
