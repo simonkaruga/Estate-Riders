@@ -1,43 +1,79 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
-import { Home, ShoppingCart, Package, LogOut, Bike, Info } from "lucide-react";
+import { NavLink } from "react-router-dom"; // removed useLocation
+import { Zap, Menu } from "lucide-react";
 
-function NavBar() {
-  const linkClass = ({ isActive }) =>
-    `flex items-center gap-1 px-3 py-1 rounded ${
-      isActive ? "bg-white text-blue-600 font-semibold" : "hover:bg-blue-500"
-    }`;
+const NavBar = ({ user, onLogout }) => {
+  const links = [
+    { to: "/home", label: "Home" },
+    { to: "/catalog", label: "Catalog" },
+    { to: "/about", label: "About" },
+  ];
 
   return (
-    <header className="bg-blue-600 text-white p-4 flex flex-col md:flex-row md:items-center md:justify-between">
-      <div className="flex items-center gap-2 mb-2 md:mb-0">
-        <Bike size={24} />
-        <h1 className="text-xl font-bold">Estate Riders</h1>
+    <nav className="fixed top-0 left-0 right-0 z-50 bg-white shadow-md">
+      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between h-16">
+        <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-500 p-2 rounded-xl">
+            <Zap size={20} className="text-white" />
+          </div>
+          <div>
+            <h1 className="font-bold text-lg text-gray-800">Estate Riders</h1>
+            <p className="text-xs text-gray-500">Electric Mobility Rentals</p>
+          </div>
+        </div>
+
+        <div className="hidden md:flex items-center gap-6">
+          {links.map((l) => (
+            <NavLink
+              key={l.to}
+              to={l.to}
+              className={({ isActive }) =>
+                `font-medium ${
+                  isActive
+                    ? "text-emerald-600 border-b-2 border-emerald-600"
+                    : "text-gray-700"
+                }`
+              }
+            >
+              {l.label}
+            </NavLink>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-4">
+          {user ? (
+            <>
+              <div className="text-right hidden sm:block">
+                <div className="text-sm font-medium text-gray-800">
+                  {user.name}
+                </div>
+                <div className="text-xs text-gray-500">{user.email}</div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="px-3 py-2 bg-emerald-500 text-white rounded-lg"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <div className="hidden md:block">
+              <NavLink
+                to="/login"
+                className="px-3 py-2 bg-emerald-500 text-white rounded-lg"
+              >
+                Login
+              </NavLink>
+            </div>
+          )}
+
+          <div className="md:hidden">
+            <Menu />
+          </div>
+        </div>
       </div>
-
-      <nav className="flex gap-2 flex-wrap">
-        <NavLink to="/" className={linkClass} end>
-          <Home size={16} /> Home
-        </NavLink>
-
-        <NavLink to="/about" className={linkClass}>
-          <Info size={16} /> About
-        </NavLink>
-
-        <NavLink to="/catalog" className={linkClass}>
-          <Package size={16} /> Catalog
-        </NavLink>
-
-        <NavLink to="/hire" className={linkClass}>
-          <ShoppingCart size={16} /> Hire
-        </NavLink>
-      </nav>
-
-      <NavLink to="/login" className="mt-2 md:mt-0 flex items-center gap-1 bg-red-500 hover:bg-red-600 px-3 py-1 rounded">
-        <LogOut size={16} /> Logout
-      </NavLink>
-    </header>
+    </nav>
   );
-}
+};
 
 export default NavBar;
