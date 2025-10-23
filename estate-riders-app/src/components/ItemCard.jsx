@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { Zap, Battery, Clock, MapPin } from "lucide-react";
+import { Battery, Clock, MapPin } from "lucide-react";
 
 const VehicleCard = ({ vehicle, isSelected, onSelect }) => {
   return (
