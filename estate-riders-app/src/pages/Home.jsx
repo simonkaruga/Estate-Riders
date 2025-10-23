@@ -84,6 +84,7 @@ const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
           </div>
         </div>
       </div>
+      </div>
     </div>
   );
 };
