@@ -11,7 +11,7 @@ const ItemDetails = ({ vehicles, onSelect }) => {
   if (!vehicle) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen text-gray-600">
-        <p className="text-xl mb-4">Vehicle not found 😢</p>
+        <p className="text-xl mb-4">Vehicle not found</p>
         <button
           onClick={() => navigate("/")}
           className="px-6 py-3 rounded-lg bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600"
@@ -116,12 +116,12 @@ const ItemDetails = ({ vehicles, onSelect }) => {
       <div className="mt-12 bg-white p-8 rounded-2xl shadow-sm">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Vehicle Features</h2>
         <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
-          <li>⚡ Eco-efficient electric motor</li>
-          <li>🔋 Long battery life (up to 50km)</li>
-          <li>💺 Ergonomic comfort seat</li>
-          <li>📱 Smart dashboard controls</li>
-          <li>🛞 Anti-slip tires</li>
-          <li>🧰 Includes maintenance & support</li>
+          <li>Eco-efficient electric motor</li>
+          <li>Long battery life (up to 50km)</li>
+          <li>Ergonomic comfort seat</li>
+          <li>Smart dashboard controls</li>
+          <li>Anti-slip tires</li>
+          <li>Includes maintenance & support</li>
         </ul>
       </div>
     </div>
