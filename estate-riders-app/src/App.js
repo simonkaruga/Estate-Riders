@@ -1,14 +1,9 @@
-<<<<<<< HEAD
-import React, { useState } from "react";
-import NavBar from "./components/NavBar";
-import About from './pages/About';
-=======
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
-import About from './pages/About';
 import LogIn from './pages/LogIn';
+import About from './pages/About';
+import Navbar from './components/NavBar';
 import HireForm from './components/HireForm';
->>>>>>> kelvin
 
 function App() {
   const [user, setUser] = useState(null);
@@ -34,7 +29,9 @@ function App() {
       // Remove password from user object before storing in state
       const { password, ...userWithoutPassword } = user;
       setUser(userWithoutPassword);
-      navigate('/about');
+
+      // ✅ Navigate to Navbar first after successful login
+      navigate('/navbar');
     } catch (error) {
       console.error('Login error:', error);
       alert(error.message || 'Login failed. Please try again.');
@@ -63,34 +60,30 @@ function App() {
         </header>
       )}
 
-<<<<<<< HEAD
-      <main className="p-4">
-        {route === "home" && <p>🏠 Welcome to Estate Riders!</p>}
-        {route === "about" && <About />}
-        {route === "add" && <p>➕ Add a new item.</p>}
-        {route === "hire" && <p>🛵 Hire a bike or scooter.</p>}
-        {route === "rentals" && <p>📦 View your rentals.</p>}
-=======
       <main className={user ? 'pt-4' : ''}>
         <Routes>
+          {/* Default route redirects depending on login state */}
           <Route
             path="/"
-            element={user ? <Navigate to="/about" /> : <LogIn onLogin={handleUserLogin} />}
+            element={user ? <Navigate to="/navbar" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/navbar" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/navbar"
+            element={user ? <Navbar /> : <Navigate to="/login" />}
           />
           <Route
             path="/about"
             element={user ? <About /> : <Navigate to="/login" />}
           />
           <Route
-            path="/login"
-            element={user ? <Navigate to="/about" /> : <LogIn onLogin={handleUserLogin} />}
-          />
-          <Route
             path="/hire"
             element={user ? <HireForm /> : <Navigate to="/login" />}
           />
         </Routes>
->>>>>>> kelvin
       </main>
     </div>
   );
