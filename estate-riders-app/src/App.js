@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
-import About from './pages/About';
 import LogIn from './pages/LogIn';
+import About from './pages/About';
+import Navbar from './components/NavBar';
 import HireForm from './components/HireForm';
+import HomePage from './pages/Home';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -28,7 +30,9 @@ function App() {
       // Remove password from user object before storing in state
       const { password, ...userWithoutPassword } = user;
       setUser(userWithoutPassword);
-      navigate('/about');
+
+      // ✅ Navigate to Navbar first after successful login
+      navigate('/navbar');
     } catch (error) {
       console.error('Login error:', error);
       alert(error.message || 'Login failed. Please try again.');
@@ -59,17 +63,30 @@ function App() {
 
       <main className={user ? 'pt-4' : ''}>
         <Routes>
+          {/* Default route redirects depending on login state */}
           <Route
             path="/"
-            element={user ? <Navigate to="/about" /> : <LogIn onLogin={handleUserLogin} />}
+            element={user ? <Navigate to="/home" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/login"
+            element={user ? <Navigate to="/home" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/home"
+            element={user ? <Navbar /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/navbar"
+            element={user ? <Navbar /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/home"
+            element={user ? <HomePage /> : <Navigate to="/login" />}
           />
           <Route
             path="/about"
             element={user ? <About /> : <Navigate to="/login" />}
-          />
-          <Route
-            path="/login"
-            element={user ? <Navigate to="/about" /> : <LogIn onLogin={handleUserLogin} />}
           />
           <Route
             path="/hire"
