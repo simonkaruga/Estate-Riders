@@ -38,34 +38,39 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Mobile Menu Button */}
-        <div className="md:hidden flex items-center">
-          <button
-            onClick={() => setIsOpen(!isOpen)}
-            className="text-gray-700 hover:text-emerald-600 focus:outline-none"
-          >
-            {isOpen ? <span className="text-2xl">×</span> : <span className="text-2xl">☰</span>}
-          </button>
+        <div className="flex items-center gap-4">
+          {user ? (
+            <>
+              <div className="text-right hidden sm:block">
+                <div className="text-sm font-medium text-gray-800">
+                  {user.name}
+                </div>
+                <div className="text-xs text-gray-500">{user.email}</div>
+              </div>
+              <button
+                onClick={onLogout}
+                className="px-3 py-2 bg-emerald-500 text-white rounded-lg"
+              >
+                Logout
+              </button>
+            </>
+          ) : (
+            <div className="hidden md:block">
+              <NavLink
+                to="/login"
+                className="px-3 py-2 bg-emerald-500 text-white rounded-lg"
+              >
+                Login
+              </NavLink>
+            </div>
+          )}
+
+          <div className="md:hidden">
+            <Menu />
+          </div>
         </div>
       </div>
-
-      {/* Mobile Menu */}
-      {isOpen && (
-        <div className="md:hidden bg-white shadow-lg">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              onClick={() => setIsOpen(false)}
-              className="block px-4 py-3 text-gray-700 hover:bg-emerald-50 hover:text-emerald-600 cursor-pointer"
-            >
-              {item.name}
-            </NavLink>
-          ))}
-        </div>
-      )}
     </nav>
-  </div>
   );
 };
 
