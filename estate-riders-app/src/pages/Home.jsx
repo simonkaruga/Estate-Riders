@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import VehicleCard from '../components/ItemCard';
-import BookingForm from '../components/HireForm';
+import ItemCard from '../components/ItemCard';
+import HireForm from '../components/HireForm';
 
 const HomePage = ({ vehicles, onBookingConfirmed }) => {
   const [filter, setFilter] = useState('all');
@@ -46,7 +46,7 @@ const HomePage = ({ vehicles, onBookingConfirmed }) => {
         {/* Vehicle List */}
         <div className="lg:col-span-2 space-y-4">
           {filteredVehicles.map((vehicle) => (
-            <VehicleCard
+            <ItemCard
               key={vehicle.id}
               vehicle={vehicle}
               isSelected={selectedVehicle?.id === vehicle.id}
@@ -57,7 +57,7 @@ const HomePage = ({ vehicles, onBookingConfirmed }) => {
 
         {/* Booking Form */}
         <div className="lg:col-span-1">
-          <BookingForm
+          <HireForm
             selectedVehicle={selectedVehicle}
             onBookingConfirmed={handleBookingConfirmed}
           />

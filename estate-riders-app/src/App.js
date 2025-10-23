@@ -4,6 +4,7 @@ import LogIn from './pages/LogIn';
 import About from './pages/About';
 import Navbar from './components/NavBar';
 import HireForm from './components/HireForm';
+import HomePage from './pages/Home';
 
 function App() {
   const [user, setUser] = useState(null);
@@ -65,15 +66,23 @@ function App() {
           {/* Default route redirects depending on login state */}
           <Route
             path="/"
-            element={user ? <Navigate to="/navbar" /> : <LogIn onLogin={handleUserLogin} />}
+            element={user ? <Navigate to="/home" /> : <LogIn onLogin={handleUserLogin} />}
           />
           <Route
             path="/login"
-            element={user ? <Navigate to="/navbar" /> : <LogIn onLogin={handleUserLogin} />}
+            element={user ? <Navigate to="/home" /> : <LogIn onLogin={handleUserLogin} />}
+          />
+          <Route
+            path="/home"
+            element={user ? <Navbar /> : <Navigate to="/login" />}
           />
           <Route
             path="/navbar"
             element={user ? <Navbar /> : <Navigate to="/login" />}
+          />
+          <Route
+            path="/home"
+            element={user ? <HomePage /> : <Navigate to="/login" />}
           />
           <Route
             path="/about"

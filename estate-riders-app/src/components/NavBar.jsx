@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { NavLink } from 'react-router-dom';
 import { Zap } from "lucide-react";
-
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
