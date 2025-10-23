@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Zap } from 'lucide-react';
-import { apiGet, apiPost } from '../api'; // ✅ Import your API helpers
+import { apiGet, apiPost } from '../api'; // Import your API helpers
 
 const LogIn = ({ onLogin }) => {
   const [email, setEmail] = useState('');
