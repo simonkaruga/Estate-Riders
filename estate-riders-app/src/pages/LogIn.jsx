@@ -1,64 +1,71 @@
 import React, { useState } from 'react';
 import { Zap } from 'lucide-react';
+import { apiGet, apiPost } from '../api'; // ✅ Import your API helpers
 
 const LogIn = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!email || !password) {
       alert('Please fill in all fields');
       return;
     }
 
     try {
-      // Check if user already exists for signup
+      setLoading(true);
+
       if (isSignup) {
-        const checkUser = await fetch(`http://localhost:3001/users?email=${encodeURIComponent(email)}`);
-        const existingUsers = await checkUser.json();
-        
-        if (existingUsers.length > 0) {
-          throw new Error('User with this email already exists');
-        }
-        // Handle signup
-        const response = await fetch('http://localhost:3001/users', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email,
-            password,
-            name: email.split('@')[0],
-            totalBookings: 0,
-            totalSpent: 0,
-            status: 'active',
-            joinDate: new Date().toISOString().split('T')[0],
-          }),
-        });
-
-        if (!response.ok) {
-          const error = await response.text();
-          throw new Error(error || 'Signup failed');
+        // 🔹 Check if user exists
+        const users = await apiGet(`users?email=${encodeURIComponent(email)}`);
+        if (users.length > 0) {
+          alert('⚠️ User with this email already exists.');
+          setLoading(false);
+          return;
         }
 
-        alert('Signup successful! Please log in.');
+        // 🔹 Create new user
+        const newUser = {
+          email,
+          password,
+          name: email.split('@')[0],
+          totalBookings: 0,
+          totalSpent: 0,
+          status: 'active',
+          joinDate: new Date().toISOString().split('T')[0],
+          role: 'user',
+        };
+
+        await apiPost('users', newUser);
+        alert('✅ Signup successful! Please log in.');
         setIsSignup(false);
         setEmail('');
         setPassword('');
       } else {
-        // Handle login
-        if (typeof onLogin !== 'function') {
-          console.error('onLogin prop is not provided');
+        // 🔹 Handle login
+        const users = await apiGet(`users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+
+        if (users.length === 0) {
+          alert('❌ Invalid email or password.');
+          setLoading(false);
           return;
         }
-        onLogin({ email, password });
+
+        const user = users[0];
+        localStorage.setItem('user', JSON.stringify(user));
+        alert(`✅ Welcome back, ${user.name}!`);
+
+        if (typeof onLogin === 'function') onLogin(user);
       }
     } catch (error) {
-      console.error('Error:', error);
-      alert(error.message || 'An error occurred');
+      console.error('Login/Signup error:', error);
+      alert('⚠️ Failed to connect to the server. Please ensure JSON Server or API is running.');
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -102,13 +109,15 @@ const LogIn = ({ onLogin }) => {
 
           <button
             type="submit"
-            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 rounded-lg font-bold hover:from-emerald-600 hover:to-teal-600 transition shadow-lg"
+            disabled={loading}
+            className="w-full bg-gradient-to-r from-emerald-500 to-teal-500 text-white py-3 rounded-lg font-bold hover:from-emerald-600 hover:to-teal-600 transition shadow-lg disabled:opacity-50"
           >
-            {isSignup ? 'Sign Up' : 'Login'}
+            {loading ? 'Processing...' : isSignup ? 'Sign Up' : 'Login'}
           </button>
 
           <div className="text-center">
             <button
+              type="button"
               onClick={() => setIsSignup(!isSignup)}
               className="text-emerald-600 hover:text-emerald-700 text-sm font-medium"
             >
