@@ -1,26 +1,62 @@
-import React, { useState } from "react";
-import NavBar from "./components/NavBar";
+import React, { useState } from 'react';
+import { Routes, Route, useNavigate, Navigate } from 'react-router-dom';
+import LogIn from './pages/LogIn';
+import About from './pages/About';
+import Navbar from './components/NavBar';
+import HireForm from './components/HireForm';
+import HomePage from './pages/Home';
 
 function App() {
-  const [route, setRoute] = useState("home");
+  const [user, setUser] = useState(null);
+  const navigate = useNavigate();
+
+  const handleUserLogin = async (userData) => {
+    try {
+      // Check if user exists
+      const response = await fetch(
+        `http://localhost:3001/users?email=${encodeURIComponent(userData.email)}`
+      );
+      const users = await response.json();
+
+      if (users.length === 0) {
+        throw new Error('User not found');
+      }
+
+      const user = users[0];
+      if (user.password !== userData.password) {
+        throw new Error('Invalid password or email');
+      }
+
+      // Remove password from user object before storing in state
+      const { password, ...userWithoutPassword } = user;
+      setUser(userWithoutPassword);
+
+      // ✅ Navigate to Navbar first after successful login
+      navigate('/navbar');
+    } catch (error) {
+      console.error('Login error:', error);
+      alert(error.message || 'Login failed. Please try again.');
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    navigate('/login');
+  };
 
   return (
     <div>
-      <NavBar
-        currentRoute={route}
-        navigate={setRoute}
-        user={{ username: "Simon" }}
-        onLogout={() => alert("Logged out")}
-      />
-
-      <main className="p-4">
-        {route === "home" && <p> Welcome to Estate Riders!</p>}
-        {route === "add" && <p> Add a new item.</p>}
-        {route === "hire" && <p> Hire a bike or scooter.</p>}
-        {route === "rentals" && <p> View your rentals.</p>}
-      </main>
-    </div>
-  );
-}
-
-export default App;
+      {/* Header with user info and logout */}
+      {user && (
+        <header className="bg-emerald-500 text-white p-4 shadow-md">
+          <div className="max-w-7xl mx-auto flex justify-between items-center">
+            <span>Welcome, {user.name}!</span>
+            <button
+              onClick={handleLogout}
+              className="px-4 py-2 bg-emerald-600 rounded hover:bg-emerald-700 transition"
+            >
+              Logout
+            </button>
+          </div>
+        </header>
+      )}
