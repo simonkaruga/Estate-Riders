@@ -19,7 +19,7 @@ export default function AddItemForm({ initialData = null, onSave, onCancel }) {
 
   useEffect(() => {
     if (initialData) {
-      // Accept both full vehicle objects and simple initial values
+
       setForm({
         name: initialData.name ?? "",
         type: initialData.type ?? "bike",
