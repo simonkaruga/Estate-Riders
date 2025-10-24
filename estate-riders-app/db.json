@@ -28,7 +28,7 @@
       "id": "1",
       "name": "Electric Mountain Bike",
       "type": "bike",
-      "price": 15,
+      "price": 150,
       "rating": 4.8,
       "image": "🚴",
       "specs": {
@@ -42,7 +42,7 @@
       "id": "2",
       "name": "City E-Bike",
       "type": "bike",
-      "price": 12,
+      "price": 120,
       "rating": 4.6,
       "image": "🚲",
       "specs": {
@@ -56,7 +56,7 @@
       "id": "3",
       "name": "Pro Electric Scooter",
       "type": "scooter",
-      "price": 10,
+      "price": 100,
       "rating": 4.7,
       "image": "🛴",
       "specs": {
@@ -70,7 +70,7 @@
       "id": "4",
       "name": "Urban Scooter",
       "type": "scooter",
-      "price": 8,
+      "price": 80,
       "rating": 4.5,
       "image": "🛴",
       "specs": {
@@ -84,7 +84,7 @@
       "id": "5",
       "name": "Electric Roller Skates",
       "type": "skates",
-      "price": 7,
+      "price": 70,
       "rating": 4.4,
       "image": "⛸️",
       "specs": {
@@ -98,7 +98,7 @@
       "id": "6",
       "name": "Pro Inline Skates",
       "type": "skates",
-      "price": 9,
+      "price": 90,
       "rating": 4.6,
       "image": "🛼",
       "specs": {
