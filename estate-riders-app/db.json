@@ -20,8 +20,18 @@
       "status": "active",
       "joinDate": "2025-10-23",
       "role": "user"
+    },
+    {
+      "id": "698e",
+      "email": "simon@gmial.com",
+      "password": "254",
+      "name": "simon",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-24",
+      "role": "user"
     }
-
   ],
   "vehicles": [
     {
