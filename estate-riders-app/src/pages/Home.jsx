@@ -1,12 +1,34 @@
-import React, { useState } from 'react';
-import ItemCard from '../components/ItemCard';
-import HireForm from '../components/HireForm';
+import React, { useEffect, useState } from "react";
+import ItemCard from "../components/ItemCard";
+import HireForm from "../components/HireForm";
+import { apiGet, apiPost } from "../api";
 
-const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
+const HomePage = ({ onBookingConfirmed }) => {
+  const [vehicles, setVehicles] = useState([]);
   const [filter, setFilter] = useState("all");
   const [selectedVehicle, setSelectedVehicle] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Filtered vehicles based on selected tab
+  // ✅ Fetch vehicles from JSON Server or Render API
+  useEffect(() => {
+    async function fetchVehicles() {
+      try {
+        setLoading(true);
+        const data = await apiGet("vehicles");
+        setVehicles(data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching vehicles:", err);
+        setError("⚠️ Failed to load vehicles. Please check your server.");
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchVehicles();
+  }, []);
+
+  // ✅ Filtered vehicles based on selected category
   const filteredVehicles = vehicles.filter((v) =>
     filter === "all" ? true : v.type === filter
   );
@@ -17,7 +39,6 @@ const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
     alert("Booking confirmed! Check 'My Bookings' to view details.");
   };
 
-  // Tabs for filters
   const tabs = [
     { value: "all", label: "All Vehicles", icon: "🎯" },
     { value: "bike", label: "E-Bikes", icon: "🚴" },
@@ -28,14 +49,14 @@ const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 py-12">
       <div className="max-w-7xl mx-auto px-4">
-
         {/* Hero Section */}
         <div className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-4">
             Rent • Ride • Repeat 
           </h1>
           <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Experience the freedom of eco-friendly rides. Book an electric bike, scooter, or skates — anytime in your estate!
+            Experience the freedom of eco-friendly rides. Book an electric bike,
+            scooter, or skates — anytime in your estate!
           </p>
         </div>
 
@@ -57,32 +78,38 @@ const HomePage = ({ vehicles = [], onBookingConfirmed }) => {
           ))}
         </div>
 
-        {/* Main Grid */}
-        <div className="grid lg:grid-cols-3 gap-8">
-          {/* Vehicle List */}
-          <div className="lg:col-span-2 space-y-4">
-            {filteredVehicles.length > 0 ? (
-              filteredVehicles.map((vehicle) => (
-                <ItemCard
-                  key={vehicle.id}
-                  vehicle={vehicle}
-                  isSelected={selectedVehicle?.id === vehicle.id}
-                  onSelect={setSelectedVehicle}
-                />
-              ))
-            ) : (
-              <p className="text-center text-gray-500">No vehicles available.</p>
-            )}
-          </div>
+        {/* Loading / Error / Data */}
+        {loading ? (
+          <div className="text-center py-12 text-gray-500">Loading vehicles...</div>
+        ) : error ? (
+          <div className="text-center py-12 text-red-500">{error}</div>
+        ) : (
+          <div className="grid lg:grid-cols-3 gap-8">
+            {/* Vehicle List */}
+            <div className="lg:col-span-2 space-y-4">
+              {filteredVehicles.length > 0 ? (
+                filteredVehicles.map((vehicle) => (
+                  <ItemCard
+                    key={vehicle.id}
+                    vehicle={vehicle}
+                    isSelected={selectedVehicle?.id === vehicle.id}
+                    onSelect={setSelectedVehicle}
+                  />
+                ))
+              ) : (
+                <p className="text-center text-gray-500">No vehicles available.</p>
+              )}
+            </div>
 
-          {/* Booking Form */}
-          <div className="lg:col-span-1">
-            <HireForm
-              selectedVehicle={selectedVehicle}
-              onBookingConfirmed={handleBookingConfirmed}
-            />
+            {/* Booking Form */}
+            <div className="lg:col-span-1">
+              <HireForm
+                selectedVehicle={selectedVehicle}
+                onBookingConfirmed={handleBookingConfirmed}
+              />
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

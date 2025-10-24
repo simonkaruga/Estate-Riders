@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import ItemCard from '../components/ItemCard';
 import AddItemForm from '../components/AddItemForm';
-import ItemDetailsPage from './ItemDetailsPage';
+import ItemDetails from './ItemDetails';
 
 const CatalogPage = ({ items, onAddItem }) => {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -71,7 +71,7 @@ const CatalogPage = ({ items, onAddItem }) => {
           <AddItemForm onAddItem={handleItemAdded} />
         </div>
       ) : selectedItem ? (
-        <ItemDetailsPage item={selectedItem} onBack={() => setSelectedItem(null)} />
+        <ItemDetails item={selectedItem} onBack={() => setSelectedItem(null)} />
       ) : (
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((item) => (
