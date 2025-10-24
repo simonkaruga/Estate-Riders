@@ -70,13 +70,13 @@ const About = () => {
     {
       name: 'PRINCE KIBALI',
       role: 'Head of Operations',
-      image: '👩‍🔧',
+      image: <img src='/images/prince.jpg' alt='Prince' className="w-24 h-24 rounded-full object-cover" />,
       bio: 'Expert in fleet management'
     },
     {
       name: 'CHRIS KABUE',
       role: 'Customer Success Lead',
-      image: '👨‍💼',
+      image: <img src='/images/chris.jpg' alt='Chris' className="w-24 h-24 rounded-full object-cover" />,
       bio: 'Passionate about customer experience'
     }
   ];
