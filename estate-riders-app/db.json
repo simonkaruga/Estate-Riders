@@ -1,16 +1,6 @@
 {
   "users": [
     {
-      "id": "e7d3",
-      "email": "kev@gmail.com",
-      "password": "123",
-      "name": "kev",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-22"
-    },
-    {
       "id": "fa3d",
       "email": "simon@gmail.com",
       "password": "254",
@@ -31,6 +21,17 @@
       "status": "active",
       "joinDate": "2025-10-24",
       "role": "user"
+    },
+    {
+      "id": "1806",
+      "email": "kev@gmail.com",
+      "password": "123",
+      "name": "kev",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-24",
+      "role": "admin"
     }
   ],
   "vehicles": [

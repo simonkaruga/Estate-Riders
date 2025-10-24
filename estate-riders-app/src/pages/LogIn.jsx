@@ -6,6 +6,7 @@ const LogIn = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false); // ✅ admin toggle
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -28,7 +29,7 @@ const LogIn = ({ onLogin }) => {
           return;
         }
 
-        // 🔹 Create new user
+        // 🔹 Create new user (admin or normal)
         const newUser = {
           email,
           password,
@@ -37,17 +38,20 @@ const LogIn = ({ onLogin }) => {
           totalSpent: 0,
           status: 'active',
           joinDate: new Date().toISOString().split('T')[0],
-          role: 'user',
+          role: isAdmin ? 'admin' : 'user', // ✅ dynamic role
         };
 
         await apiPost('users', newUser);
-        alert('Signup successful! Please log in.');
+        alert(`Signup successful! Please log in as ${isAdmin ? 'Admin' : 'User'}.`);
         setIsSignup(false);
         setEmail('');
         setPassword('');
+        setIsAdmin(false);
       } else {
         // 🔹 Handle login
-        const users = await apiGet(`users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
+        const users = await apiGet(
+          `users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+        );
 
         if (users.length === 0) {
           alert('Invalid email or password.');
@@ -63,7 +67,7 @@ const LogIn = ({ onLogin }) => {
       }
     } catch (error) {
       console.error('Login/Signup error:', error);
-      alert('Failed to connect to the server. Please ensure JSON Server or API is running.');
+      alert('⚠️ Failed to connect to the server. Please ensure JSON Server or API is running.');
     } finally {
       setLoading(false);
     }
@@ -106,6 +110,22 @@ const LogIn = ({ onLogin }) => {
               required
             />
           </div>
+
+          {/* ✅ Admin signup toggle */}
+          {isSignup && (
+            <div className="flex items-center space-x-2">
+              <input
+                type="checkbox"
+                id="isAdmin"
+                checked={isAdmin}
+                onChange={(e) => setIsAdmin(e.target.checked)}
+                className="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500"
+              />
+              <label htmlFor="isAdmin" className="text-sm text-gray-700">
+                Register as Admin
+              </label>
+            </div>
+          )}
 
           <button
             type="submit"

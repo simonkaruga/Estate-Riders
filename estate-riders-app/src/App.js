@@ -12,13 +12,15 @@ import NavBar from "./components/NavBar";
 
 function App() {
   const navigate = useNavigate();
+
+  // 🔹 Global State
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Load all data from the JSON Server (local or remote)
+  // 🔹 Load all data from API or JSON Server
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -26,13 +28,13 @@ function App() {
         const [usersData, vehiclesData, bookingsData] = await Promise.all([
           apiGet("users"),
           apiGet("vehicles"),
-          apiGet("bookings")
+          apiGet("bookings"),
         ]);
         setUsers(usersData);
         setVehicles(vehiclesData);
         setBookings(bookingsData);
       } catch (err) {
-        console.error("Failed to load data:", err);
+        console.error("❌ Failed to load data:", err);
       } finally {
         setLoading(false);
       }
@@ -40,26 +42,46 @@ function App() {
     loadData();
   }, []);
 
-  // LOGIN / SIGNUP FUNCTIONS
+  // 🔹 Restore user session from localStorage
+  useEffect(() => {
+    const savedUser = localStorage.getItem("user");
+    if (savedUser) setUser(JSON.parse(savedUser));
+  }, []);
+
+  // =====================================================
+  // LOGIN / SIGNUP
+  // =====================================================
   const handleLogin = async ({ email, password }) => {
     try {
-      const data = await apiGet("users");
-      const found = data.find((u) => u.email.toLowerCase() === email.toLowerCase());
+      const usersData = await apiGet("users");
+      const found = usersData.find(
+        (u) => u.email.toLowerCase() === email.toLowerCase()
+      );
+
       if (!found) throw new Error("User not found");
       if (found.password !== password) throw new Error("Invalid password");
+
       setUser(found);
-      navigate("/home");
+      localStorage.setItem("user", JSON.stringify(found));
+
+      // ✅ Redirect based on role
+      if (found.role === "admin") {
+        navigate("/admin");
+      } else {
+        navigate("/home");
+      }
     } catch (err) {
       alert(err.message);
     }
   };
 
-  const handleSignup = async ({ email, password }) => {
+  const handleSignup = async ({ email, password, role = "user" }) => {
     try {
       const data = await apiGet("users");
       if (data.some((u) => u.email.toLowerCase() === email.toLowerCase())) {
         throw new Error("User already exists");
       }
+
       const newUser = {
         name: email.split("@")[0],
         email,
@@ -67,8 +89,10 @@ function App() {
         totalBookings: 0,
         totalSpent: 0,
         status: "active",
-        joinDate: new Date().toISOString().split("T")[0]
+        joinDate: new Date().toISOString().split("T")[0],
+        role, // user or admin
       };
+
       await apiPost("users", newUser);
       alert("Signup successful! You can now login.");
     } catch (err) {
@@ -78,19 +102,23 @@ function App() {
 
   const handleLogout = () => {
     setUser(null);
+    localStorage.removeItem("user");
     navigate("/login");
   };
 
+  // =====================================================
   // BOOKINGS
+  // =====================================================
   const addBooking = async (booking) => {
     try {
       await apiPost("bookings", booking);
       setBookings((prev) => [...prev, booking]);
-      alert("Booking confirmed!");
+      alert("✅ Booking confirmed!");
     } catch (err) {
       alert("Failed to save booking: " + err.message);
     }
   };
+
   const cancelBooking = async (id) => {
     try {
       await apiDelete("bookings", id);
@@ -100,12 +128,16 @@ function App() {
     }
   };
 
+  // =====================================================
   // VEHICLES CRUD
+  // =====================================================
   const addOrUpdateVehicle = async (vehicle, editingId = null) => {
     try {
       if (editingId) {
         await apiPatch("vehicles", editingId, vehicle);
-        setVehicles((v) => v.map((x) => (x.id === editingId ? { ...x, ...vehicle } : x)));
+        setVehicles((v) =>
+          v.map((x) => (x.id === editingId ? { ...x, ...vehicle } : x))
+        );
       } else {
         const newVehicle = await apiPost("vehicles", vehicle);
         setVehicles((v) => [...v, newVehicle]);
@@ -124,29 +156,78 @@ function App() {
     }
   };
 
+  // =====================================================
+  // LOADING SCREEN
+  // =====================================================
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen text-gray-600">
-        Loading Estate Riders data...
+        🚴‍♂️ Loading Estate Riders data...
       </div>
     );
   }
 
+  // =====================================================
+  // ROUTES
+  // =====================================================
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
       <NavBar user={user} onLogout={handleLogout} />
+
       <main className={user ? "pt-20" : "pt-8"}>
         <Routes>
-          <Route path="/" element={user ? <Navigate to="/home" /> : <Login onLogin={handleLogin} onSignup={handleSignup} />} />
-          <Route path="/login" element={user ? <Navigate to="/home" /> : <Login onLogin={handleLogin} onSignup={handleSignup} />} />
-          <Route path="/home" element={user ? <Home vehicles={vehicles} onBookingConfirmed={addBooking} /> : <Navigate to="/login" />} />
-          <Route path="/catalog" element={<CatalogPage items={vehicles} onAddItem={addOrUpdateVehicle} />} />
+          {/* Default Login Route */}
+          <Route
+            path="/"
+            element={
+              user ? (
+                <Navigate to={user.role === "admin" ? "/admin" : "/home"} />
+              ) : (
+                <Login onLogin={handleLogin} onSignup={handleSignup} />
+              )
+            }
+          />
+
+          <Route
+            path="/login"
+            element={
+              user ? (
+                <Navigate to={user.role === "admin" ? "/admin" : "/home"} />
+              ) : (
+                <Login onLogin={handleLogin} onSignup={handleSignup} />
+              )
+            }
+          />
+
+          {/* Home (for users) */}
+          <Route
+            path="/home"
+            element={
+              user ? (
+                <Home vehicles={vehicles} onBookingConfirmed={addBooking} />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
+
+          {/* Catalog Page */}
+          <Route
+            path="/catalog"
+            element={<CatalogPage items={vehicles} onAddItem={addOrUpdateVehicle} />}
+          />
+
+          {/* Item Details */}
           <Route path="/item/:id" element={<ItemDetails vehicles={vehicles} />} />
+
+          {/* About Page */}
           <Route path="/about" element={<About />} />
+
+          {/* ✅ Admin Dashboard (protected) */}
           <Route
             path="/admin"
             element={
-              user ? (
+              user && user.role === "admin" ? (
                 <AdminDashboard
                   vehicles={vehicles}
                   bookings={bookings}
@@ -159,11 +240,16 @@ function App() {
                   }
                 />
               ) : (
-                <Navigate to="/login" />
+                <Navigate to="/login" replace />
               )
             }
           />
-          <Route path="*" element={<Navigate to={user ? "/home" : "/login"} />} />
+
+          {/* Fallback Route */}
+          <Route
+            path="*"
+            element={<Navigate to={user ? "/home" : "/login"} replace />}
+          />
         </Routes>
       </main>
     </div>
