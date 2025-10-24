@@ -1,17 +1,6 @@
 {
   "users": [
     {
-      "id": "1",
-      "name": "John Doe",
-      "email": "john@example.com",
-      "phone": "+254712345678",
-      "password": "password123",
-      "totalBookings": 15,
-      "totalSpent": 450,
-      "status": "active",
-      "joinDate": "2024-01-15"
-    },
-    {
       "id": "e7d3",
       "email": "kev@gmail.com",
       "password": "123",
@@ -21,6 +10,7 @@
       "status": "active",
       "joinDate": "2025-10-22"
     }
+
   ],
   "vehicles": [
     {
