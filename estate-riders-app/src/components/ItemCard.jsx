@@ -59,7 +59,7 @@ const ItemCard = ({ vehicle, isSelected, onSelect }) => {
       {/* Select Indicator */}
       {isSelected && (
         <div className="bg-emerald-600 text-white text-center py-2 font-semibold">
-          Selected ✅
+          Selected 
         </div>
       )}
     </motion.div>

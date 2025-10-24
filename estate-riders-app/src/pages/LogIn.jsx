@@ -23,7 +23,7 @@ const LogIn = ({ onLogin }) => {
         // 🔹 Check if user exists
         const users = await apiGet(`users?email=${encodeURIComponent(email)}`);
         if (users.length > 0) {
-          alert('⚠️ User with this email already exists.');
+          alert('User with this email already exists.');
           setLoading(false);
           return;
         }
@@ -41,7 +41,7 @@ const LogIn = ({ onLogin }) => {
         };
 
         await apiPost('users', newUser);
-        alert('✅ Signup successful! Please log in.');
+        alert('Signup successful! Please log in.');
         setIsSignup(false);
         setEmail('');
         setPassword('');
@@ -50,20 +50,20 @@ const LogIn = ({ onLogin }) => {
         const users = await apiGet(`users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`);
 
         if (users.length === 0) {
-          alert('❌ Invalid email or password.');
+          alert('Invalid email or password.');
           setLoading(false);
           return;
         }
 
         const user = users[0];
         localStorage.setItem('user', JSON.stringify(user));
-        alert(`✅ Welcome back, ${user.name}!`);
+        alert(`Welcome back, ${user.name}!`);
 
         if (typeof onLogin === 'function') onLogin(user);
       }
     } catch (error) {
       console.error('Login/Signup error:', error);
-      alert('⚠️ Failed to connect to the server. Please ensure JSON Server or API is running.');
+      alert('Failed to connect to the server. Please ensure JSON Server or API is running.');
     } finally {
       setLoading(false);
     }
