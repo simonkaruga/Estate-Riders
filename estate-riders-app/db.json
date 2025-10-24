@@ -19,7 +19,7 @@
       "type": "bike",
       "price": 150,
       "rating": 4.8,
-      "image": "🚴",
+      "image": "https://ampdbros.com.au/cdn/shop/files/DSC01449_9e4b5f72-c8ef-4bd3-91fb-2b8289c34845.jpg?v=1720393629&width=1500",
       "specs": {
         "range": "50km",
         "speed": "25km/h",
@@ -33,7 +33,7 @@
       "type": "bike",
       "price": 120,
       "rating": 4.6,
-      "image": "🚲",
+      "image": "https://cikadabikes.com/cdn/shop/files/Citymain_0606.png?v=1758772974&width=600",
       "specs": {
         "range": "40km",
         "speed": "20km/h",
@@ -47,7 +47,7 @@
       "type": "scooter",
       "price": 100,
       "rating": 4.7,
-      "image": "🛴",
+      "image": "https://www.envirorides.co.uk/cdn/shop/files/EVR_Hero_GreenLights.png?v=1705574070&width=1214",
       "specs": {
         "range": "35km",
         "speed": "25km/h",
@@ -61,7 +61,7 @@
       "type": "scooter",
       "price": 80,
       "rating": 4.5,
-      "image": "🛴",
+      "image": "https://urbanscooter.lv/image/cache/catalog/urbans/wp-content/uploads/2018/07/scooter-02-550x550w.png",
       "specs": {
         "range": "25km",
         "speed": "20km/h",
@@ -75,7 +75,7 @@
       "type": "skates",
       "price": 70,
       "rating": 4.4,
-      "image": "⛸️",
+      "image": "https://wheelfeet.com/cdn/shop/files/Wheelfeet-Electric-Roller-Skates-Motorized-Eskates-new-31111.jpg?v=1711461178&width=2048",
       "specs": {
         "range": "15km",
         "speed": "15km/h",
@@ -89,7 +89,7 @@
       "type": "skates",
       "price": 90,
       "rating": 4.6,
-      "image": "🛼",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/818WOxHqYML.jpg",
       "specs": {
         "range": "20km",
         "speed": "18km/h",
@@ -100,7 +100,7 @@
   ],
   "bookings": [
     {
-      "id": "1761301995819",
+      "id": "1761317325612",
       "userId": "3cbe",
       "vehicleId": "1",
       "total": 150,
@@ -108,29 +108,51 @@
       "duration": "1",
       "location": "Main Gate",
       "status": "confirmed",
-      "createdAt": "2025-10-24T10:33:15.819Z"
+      "createdAt": "2025-10-24T14:48:45.612Z"
     },
     {
-      "id": "1761301995819",
+      "id": "1761317339470",
       "userId": "3cbe",
-      "vehicleId": "1",
-      "total": 150,
+      "vehicleId": "6",
+      "total": 90,
       "date": "2025-10-24",
       "duration": "1",
       "location": "Main Gate",
       "status": "confirmed",
-      "createdAt": "2025-10-24T10:33:15.819Z"
+      "createdAt": "2025-10-24T14:48:59.470Z"
     },
     {
-      "id": "1761301995819",
+      "id": "1761317353448",
       "userId": "3cbe",
-      "vehicleId": "1",
-      "total": 150,
-      "date": "2025-10-24",
+      "vehicleId": "6",
+      "total": 90,
+      "date": "2025-10-30",
       "duration": "1",
       "location": "Main Gate",
       "status": "confirmed",
-      "createdAt": "2025-10-24T10:33:15.819Z"
+      "createdAt": "2025-10-24T14:49:13.448Z"
+    },
+    {
+      "id": "1761317362658",
+      "userId": "3cbe",
+      "vehicleId": "1",
+      "total": 150,
+      "date": "2025-10-03",
+      "duration": "1",
+      "location": "Main Gate",
+      "status": "confirmed",
+      "createdAt": "2025-10-24T14:49:22.658Z"
+    },
+    {
+      "id": "1761317381490",
+      "userId": "3cbe",
+      "vehicleId": "5",
+      "total": 70,
+      "date": "2025-10-31",
+      "duration": "1",
+      "location": "Main Gate",
+      "status": "confirmed",
+      "createdAt": "2025-10-24T14:49:41.490Z"
     }
   ]
 }

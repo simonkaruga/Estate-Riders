@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import ItemCard from '../components/ItemCard';
-import AddItemForm from '../components/AddItemForm';
-import ItemDetails from './ItemDetails';
+import React, { useState } from "react";
+import ItemCard from "../components/ItemCard";
+import AddItemForm from "../components/AddItemForm";
+import ItemDetails from "./ItemDetails";
 
 const CatalogPage = ({ items, onAddItem }) => {
-  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedItem, setSelectedItem] = useState(null);
   const [showAddForm, setShowAddForm] = useState(false);
 
   const categories = [
-    { key: 'all', label: 'All Items' },
-    { key: 'bike', label: 'E-Bikes' },
-    { key: 'scooter', label: 'Scooters' },
-    { key: 'skates', label: 'Skates' },
+    { key: "all", label: "All Items" },
+    { key: "bike", label: "E-Bikes" },
+    { key: "scooter", label: "Scooters" },
+    { key: "skates", label: "Skates" },
   ];
 
   // Filter items by category
   const filteredItems =
-    selectedCategory === 'all'
+    selectedCategory === "all"
       ? items
       : items.filter((item) => item.type === selectedCategory);
 
@@ -35,6 +35,7 @@ const CatalogPage = ({ items, onAddItem }) => {
 
   return (
     <div className="max-w-7xl mx-auto p-6">
+      {/* Header */}
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-gray-800">Our Catalog</h1>
         <button
@@ -44,7 +45,7 @@ const CatalogPage = ({ items, onAddItem }) => {
           }}
           className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg shadow transition"
         >
-          {showAddForm ? 'Close Form' : 'Add New Item'}
+          {showAddForm ? "Close Form" : "Add New Item"}
         </button>
       </div>
 
@@ -56,8 +57,8 @@ const CatalogPage = ({ items, onAddItem }) => {
             onClick={() => setSelectedCategory(cat.key)}
             className={`px-6 py-3 rounded-lg font-medium transition whitespace-nowrap ${
               selectedCategory === cat.key
-                ? 'bg-emerald-500 text-white shadow-lg'
-                : 'bg-white text-gray-700 hover:bg-gray-50'
+                ? "bg-emerald-500 text-white shadow-lg"
+                : "bg-white text-gray-700 hover:bg-gray-50"
             }`}
           >
             {cat.label}
@@ -73,9 +74,13 @@ const CatalogPage = ({ items, onAddItem }) => {
       ) : selectedItem ? (
         <ItemDetails item={selectedItem} onBack={() => setSelectedItem(null)} />
       ) : (
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 place-items-center">
           {filteredItems.map((item) => (
-            <ItemCard key={item.id} item={item} onClick={() => handleItemClick(item)} />
+            <ItemCard
+              key={item.id}
+              item={item}
+              onClick={() => handleItemClick(item)}
+            />
           ))}
         </div>
       )}

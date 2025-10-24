@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
 import { apiGet, apiPost, apiPatch, apiDelete } from "./api.js";
 
@@ -19,7 +19,8 @@ function App() {
   const [vehicles, setVehicles] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isBooking, setIsBooking] = useState(false); // Prevent multiple bookings
+  const bookingLock = useRef(false);
+  const [toast, setToast] = useState(null);
 
   // =====================================================
   // INITIAL LOAD (Fetch users, vehicles, bookings)
@@ -37,7 +38,7 @@ function App() {
         setVehicles(vehiclesData);
         setBookings(bookingsData);
       } catch (err) {
-        console.error(" Failed to load data:", err);
+        console.error("Failed to load data:", err);
       } finally {
         setLoading(false);
       }
@@ -52,6 +53,14 @@ function App() {
     const savedUser = localStorage.getItem("user");
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
+
+  // =====================================================
+  // TOAST MESSAGE HELPER
+  // =====================================================
+  const showToast = (message, type = "success") => {
+    setToast({ message, type });
+    setTimeout(() => setToast(null), 4000);
+  };
 
   // =====================================================
   // LOGIN / SIGNUP
@@ -69,11 +78,10 @@ function App() {
       setUser(found);
       localStorage.setItem("user", JSON.stringify(found));
 
-      // Redirect based on role
       if (found.role === "admin") navigate("/admin");
       else navigate("/home");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -92,13 +100,13 @@ function App() {
         totalSpent: 0,
         status: "active",
         joinDate: new Date().toISOString().split("T")[0],
-        role, // "user" or "admin"
+        role,
       };
 
       await apiPost("users", newUser);
-      alert("Signup successful! You can now login.");
+      showToast("Signup successful! You can now log in.");
     } catch (err) {
-      alert(err.message);
+      showToast(err.message, "error");
     }
   };
 
@@ -108,54 +116,83 @@ function App() {
     navigate("/login");
   };
 
-// =====================================================
-// BOOKINGS (NO POP-UPS, NO DUPLICATES)
-// =====================================================
-const addBooking = async (booking) => {
-  if (isBooking) return; // prevent multiple rapid clicks
-  setIsBooking(true);
-
-  try {
-    // Check if the same user already booked this vehicle on the same date
-    const alreadyExists = bookings.some(
-      (b) =>
-        b.userId === booking.userId &&
-        b.vehicleId === booking.vehicleId &&
-        b.date === booking.date
-    );
-
-    if (alreadyExists) {
-      console.log("Duplicate booking ignored silently.");
-      setIsBooking(false);
-      return; // stop execution without showing a popup
+  // =====================================================
+  // BOOKINGS - SINGLE BOOKING ONLY
+  // =====================================================
+  const addBooking = async (booking) => {
+    // CRITICAL: Prevent any concurrent booking attempts
+    if (bookingLock.current) {
+      console.log(" Booking in progress, ignoring duplicate request");
+      return;
     }
 
-    // Save booking to JSON server
-    const savedBooking = await apiPost("bookings", booking);
+    // Lock immediately before any async operations
+    bookingLock.current = true;
 
-    // Update state cleanly
-    setBookings((prev) => [...prev, savedBooking]);
+    try {
+      //  STEP 1: Fetch fresh bookings data from server
+      const freshBookings = await apiGet("bookings");
+      
+      // STEP 2: Check for duplicates in fresh data
+      const duplicateExists = freshBookings.some(
+        (b) =>
+          String(b.userId) === String(booking.userId) &&
+          String(b.vehicleId) === String(booking.vehicleId) &&
+          b.date === booking.date
+      );
 
-    console.log(" Booking confirmed:", savedBooking);
-  } catch (err) {
-    console.error(" Booking error:", err);
-  } finally {
-    setIsBooking(false);
-  }
-};
+      if (duplicateExists) {
+        showToast("You already booked this item for this date.", "error");
+        return;
+      }
 
-// ====================================================
-// CANCEL BOOKING
-// ====================================================
-const cancelBooking = async (id) => {
-  try {
-    await apiDelete("bookings", id);
-    setBookings((prev) => prev.filter((b) => b.id !== id));
-    console.log(` Booking ${id} canceled.`);
-  } catch (err) {
-    console.error(" Failed to cancel booking:", err);
-  }
-};
+      //  STEP 3: Check for any active booking for same vehicle
+      const activeBookingExists = freshBookings.some(
+        (b) =>
+          String(b.userId) === String(booking.userId) &&
+          String(b.vehicleId) === String(booking.vehicleId) &&
+          b.status !== "cancelled" &&
+          b.status !== "completed"
+      );
+
+      if (activeBookingExists) {
+        showToast("You already have an active booking for this vehicle.", "error");
+        return;
+      }
+
+      //  STEP 4: Create the booking (single API call)
+      const savedBooking = await apiPost("bookings", booking);
+      
+      //  STEP 5: Update local state with the saved booking
+      setBookings((prev) => [...prev, savedBooking]);
+
+      //  STEP 6: Show success message
+      showToast("Booking confirmed successfully!");
+
+    } catch (err) {
+      console.error("Booking error:", err);
+      showToast("Booking failed. Please try again.", "error");
+    } finally {
+      // STEP 7: Release lock after 2 seconds
+      setTimeout(() => {
+        bookingLock.current = false;
+      }, 2000);
+    }
+  };
+
+  // =====================================================
+  // CANCEL BOOKING
+  // =====================================================
+  const cancelBooking = async (id) => {
+    try {
+      await apiDelete("bookings", id);
+      setBookings((prev) => prev.filter((b) => b.id !== id));
+      showToast("Booking cancelled.");
+    } catch (err) {
+      console.error("Failed to cancel booking:", err);
+      showToast("Failed to cancel booking.", "error");
+    }
+  };
 
   // =====================================================
   // VEHICLES CRUD
@@ -171,8 +208,9 @@ const cancelBooking = async (id) => {
         const newVehicle = await apiPost("vehicles", vehicle);
         setVehicles((v) => [...v, newVehicle]);
       }
+      showToast("Vehicle saved successfully!");
     } catch (err) {
-      alert("Vehicle save failed: " + err.message);
+      showToast("Vehicle save failed: " + err.message, "error");
     }
   };
 
@@ -180,8 +218,9 @@ const cancelBooking = async (id) => {
     try {
       await apiDelete("vehicles", id);
       setVehicles((v) => v.filter((x) => x.id !== id));
+      showToast("Vehicle deleted.");
     } catch (err) {
-      alert("Delete failed: " + err.message);
+      showToast("Delete failed: " + err.message, "error");
     }
   };
 
@@ -191,7 +230,7 @@ const cancelBooking = async (id) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen text-gray-600">
-         Loading Estate Riders data...
+        Loading Estate Riders data...
       </div>
     );
   }
@@ -200,12 +239,25 @@ const cancelBooking = async (id) => {
   // ROUTES
   // =====================================================
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative">
       <NavBar user={user} onLogout={handleLogout} />
+
+      {/* Toast Notification */}
+      {toast && (
+        <div
+          style={{ top: '100px' }}
+          className={`fixed right-8 px-6 py-4 rounded-lg shadow-xl text-white font-medium transition-all duration-500 z-[9999] ${
+            toast.type === "error"
+              ? "bg-red-500"
+              : "bg-green-500"
+          }`}
+        >
+          {toast.message}
+        </div>
+      )}
 
       <main className={user ? "pt-20" : "pt-8"}>
         <Routes>
-          {/* Default Login Route */}
           <Route
             path="/"
             element={
@@ -217,7 +269,6 @@ const cancelBooking = async (id) => {
             }
           />
 
-          {/* Login Route */}
           <Route
             path="/login"
             element={
@@ -229,31 +280,39 @@ const cancelBooking = async (id) => {
             }
           />
 
-          {/* Home (for normal users) */}
           <Route
             path="/home"
             element={
               user ? (
-                <Home vehicles={vehicles} onBookingConfirmed={addBooking} />
+                <Home 
+                  vehicles={vehicles} 
+                  onBookingConfirmed={addBooking}
+                  currentUser={user}
+                />
               ) : (
                 <Navigate to="/login" />
               )
             }
           />
 
-          {/* Catalog */}
           <Route
             path="/catalog"
             element={<CatalogPage items={vehicles} onAddItem={addOrUpdateVehicle} />}
           />
 
-          {/* Item Details */}
-          <Route path="/item/:id" element={<ItemDetails vehicles={vehicles} />} />
+          <Route
+            path="/item/:id"
+            element={
+              <ItemDetails 
+                vehicles={vehicles}
+                onBookNow={addBooking}
+                currentUser={user}
+              />
+            }
+          />
 
-          {/* About Page */}
           <Route path="/about" element={<About />} />
 
-          {/* Admin Dashboard (Protected) */}
           <Route
             path="/admin"
             element={
@@ -266,7 +325,9 @@ const cancelBooking = async (id) => {
                   onDeleteVehicle={deleteVehicle}
                   onCancelBooking={cancelBooking}
                   onUpdateBooking={(b) =>
-                    setBookings((prev) => prev.map((x) => (x.id === b.id ? b : x)))
+                    setBookings((prev) =>
+                      prev.map((x) => (x.id === b.id ? b : x))
+                    )
                   }
                 />
               ) : (
@@ -275,7 +336,6 @@ const cancelBooking = async (id) => {
             }
           />
 
-          {/* Fallback Route */}
           <Route
             path="*"
             element={<Navigate to={user ? "/home" : "/login"} replace />}
