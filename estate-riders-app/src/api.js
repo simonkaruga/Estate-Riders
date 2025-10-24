@@ -8,13 +8,13 @@ export async function getBaseURL() {
     // JSON Server always exposes /users, so we can test that
     const res = await fetch(`${LOCAL_BASE_URL}/users`, { method: "GET" });
     if (res.ok) {
-      console.log("✅ Using local JSON Server:", LOCAL_BASE_URL);
+      console.log("Using local JSON Server:", LOCAL_BASE_URL);
       return LOCAL_BASE_URL;
     }
   } catch (err) {
-    console.warn("⚠️ Local JSON Server not reachable. Switching to remote API.");
+    console.warn("Local JSON Server not reachable. Switching to remote API.");
   }
-  console.log("🌐 Using remote API:", REMOTE_BASE_URL);
+  console.log("Using remote API:", REMOTE_BASE_URL);
   return REMOTE_BASE_URL;
 }
 

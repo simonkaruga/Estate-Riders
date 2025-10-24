@@ -13,14 +13,17 @@ import NavBar from "./components/NavBar";
 function App() {
   const navigate = useNavigate();
 
-  // 🔹 Global State
+  // 🔹 Global App State
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [vehicles, setVehicles] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [isBooking, setIsBooking] = useState(false); // Prevent multiple bookings
 
-  // 🔹 Load all data from API or JSON Server
+  // =====================================================
+  // INITIAL LOAD (Fetch users, vehicles, bookings)
+  // =====================================================
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -34,7 +37,7 @@ function App() {
         setVehicles(vehiclesData);
         setBookings(bookingsData);
       } catch (err) {
-        console.error("❌ Failed to load data:", err);
+        console.error(" Failed to load data:", err);
       } finally {
         setLoading(false);
       }
@@ -42,7 +45,9 @@ function App() {
     loadData();
   }, []);
 
-  // 🔹 Restore user session from localStorage
+  // =====================================================
+  // RESTORE USER SESSION
+  // =====================================================
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) setUser(JSON.parse(savedUser));
@@ -64,12 +69,9 @@ function App() {
       setUser(found);
       localStorage.setItem("user", JSON.stringify(found));
 
-      // ✅ Redirect based on role
-      if (found.role === "admin") {
-        navigate("/admin");
-      } else {
-        navigate("/home");
-      }
+      // Redirect based on role
+      if (found.role === "admin") navigate("/admin");
+      else navigate("/home");
     } catch (err) {
       alert(err.message);
     }
@@ -90,7 +92,7 @@ function App() {
         totalSpent: 0,
         status: "active",
         joinDate: new Date().toISOString().split("T")[0],
-        role, // user or admin
+        role, // "user" or "admin"
       };
 
       await apiPost("users", newUser);
@@ -106,27 +108,54 @@ function App() {
     navigate("/login");
   };
 
-  // =====================================================
-  // BOOKINGS
-  // =====================================================
-  const addBooking = async (booking) => {
-    try {
-      await apiPost("bookings", booking);
-      setBookings((prev) => [...prev, booking]);
-      alert("✅ Booking confirmed!");
-    } catch (err) {
-      alert("Failed to save booking: " + err.message);
-    }
-  };
+// =====================================================
+// BOOKINGS (NO POP-UPS, NO DUPLICATES)
+// =====================================================
+const addBooking = async (booking) => {
+  if (isBooking) return; // prevent multiple rapid clicks
+  setIsBooking(true);
 
-  const cancelBooking = async (id) => {
-    try {
-      await apiDelete("bookings", id);
-      setBookings((prev) => prev.filter((b) => b.id !== id));
-    } catch (err) {
-      alert("Failed to cancel booking: " + err.message);
+  try {
+    // Check if the same user already booked this vehicle on the same date
+    const alreadyExists = bookings.some(
+      (b) =>
+        b.userId === booking.userId &&
+        b.vehicleId === booking.vehicleId &&
+        b.date === booking.date
+    );
+
+    if (alreadyExists) {
+      console.log("Duplicate booking ignored silently.");
+      setIsBooking(false);
+      return; // stop execution without showing a popup
     }
-  };
+
+    // Save booking to JSON server
+    const savedBooking = await apiPost("bookings", booking);
+
+    // Update state cleanly
+    setBookings((prev) => [...prev, savedBooking]);
+
+    console.log(" Booking confirmed:", savedBooking);
+  } catch (err) {
+    console.error(" Booking error:", err);
+  } finally {
+    setIsBooking(false);
+  }
+};
+
+// =====================================================
+// CANCEL BOOKING
+// =====================================================
+const cancelBooking = async (id) => {
+  try {
+    await apiDelete("bookings", id);
+    setBookings((prev) => prev.filter((b) => b.id !== id));
+    console.log(` Booking ${id} canceled.`);
+  } catch (err) {
+    console.error(" Failed to cancel booking:", err);
+  }
+};
 
   // =====================================================
   // VEHICLES CRUD
@@ -162,7 +191,7 @@ function App() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-screen text-gray-600">
-        🚴‍♂️ Loading Estate Riders data...
+         Loading Estate Riders data...
       </div>
     );
   }
@@ -188,6 +217,7 @@ function App() {
             }
           />
 
+          {/* Login Route */}
           <Route
             path="/login"
             element={
@@ -199,7 +229,7 @@ function App() {
             }
           />
 
-          {/* Home (for users) */}
+          {/* Home (for normal users) */}
           <Route
             path="/home"
             element={
@@ -211,7 +241,7 @@ function App() {
             }
           />
 
-          {/* Catalog Page */}
+          {/* Catalog */}
           <Route
             path="/catalog"
             element={<CatalogPage items={vehicles} onAddItem={addOrUpdateVehicle} />}
@@ -223,7 +253,7 @@ function App() {
           {/* About Page */}
           <Route path="/about" element={<About />} />
 
-          {/* ✅ Admin Dashboard (protected) */}
+          {/* Admin Dashboard (Protected) */}
           <Route
             path="/admin"
             element={

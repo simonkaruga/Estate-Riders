@@ -4,7 +4,6 @@ import {
   Bike,
   Users,
   Calendar,
-  Settings,
   TrendingUp,
   Plus,
   X,
@@ -14,7 +13,7 @@ import {
 } from "lucide-react";
 import { apiGet } from "../api";
 
-// ✅ Modal for vehicle add/edit
+//  Modal for vehicle add/edit
 const VehicleModal = ({ vehicle, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     vehicle || {
@@ -163,7 +162,7 @@ const VehicleModal = ({ vehicle, onSave, onClose }) => {
   );
 };
 
-// ✅ Main Admin Dashboard
+//  Main Admin Dashboard
 export default function AdminDashboard({
   vehicles = [],
   bookings = [],
@@ -178,7 +177,7 @@ export default function AdminDashboard({
 
   const [latestData, setLatestData] = useState({ vehicles, bookings, users });
 
-  // 🔄 Auto-refresh from JSON Server when data changes
+  // Auto-refresh from JSON Server when data changes
   useEffect(() => {
     const refresh = async () => {
       try {
@@ -226,7 +225,7 @@ export default function AdminDashboard({
     { id: "bookings", name: "Bookings", icon: Calendar },
     { id: "users", name: "Users", icon: Users },
     { id: "analytics", name: "Analytics", icon: TrendingUp },
-    { id: "settings", name: "Settings", icon: Settings },
+    
   ];
 
   return (
@@ -354,35 +353,64 @@ export default function AdminDashboard({
             </div>
           )}
 
-          {/* Bookings */}
-          {activeTab === "bookings" && (
-            <div className="bg-white rounded-xl shadow-md p-6">
-              <h3 className="text-lg font-semibold mb-4">All Bookings</h3>
-              <table className="w-full border">
-                <thead className="bg-gray-50 border-b">
-                  <tr>
-                    <th className="px-4 py-2 text-left text-xs font-semibold">User</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold">Vehicle</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold">Total (KSh)</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold">Date</th>
-                    <th className="px-4 py-2 text-left text-xs font-semibold">Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {latestData.bookings.map((b) => (
-                    <tr key={b.id} className="border-t hover:bg-gray-50">
-                      <td className="px-4 py-2">{b.userName || "Unknown"}</td>
-                      <td className="px-4 py-2">{b.vehicleName || "N/A"}</td>
-                      <td className="px-4 py-2">KSh {b.total?.toLocaleString()}</td>
-                      <td className="px-4 py-2">{b.date || "—"}</td>
-                      <td className="px-4 py-2 capitalize">{b.status || "pending"}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          )}
+{/*  BOOKINGS TAB */}
+{activeTab === "bookings" && (
+  <div className="bg-white rounded-xl shadow-md p-6">
+    <h3 className="text-lg font-semibold mb-4">All Bookings</h3>
 
+    {latestData.bookings.length === 0 ? (
+      <p className="text-gray-500 text-center py-8">
+        No bookings found.
+      </p>
+    ) : (
+      <table className="w-full border">
+        <thead className="bg-gray-50 border-b">
+          <tr>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
+              User
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
+              Vehicle
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
+              Total (KSh)
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
+              Date
+            </th>
+            <th className="px-4 py-2 text-left text-xs font-semibold text-gray-600 uppercase">
+              Status
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          {latestData.bookings.map((b) => {
+            // Get user name via userId
+            const user = latestData.users.find((u) => u.id === b.userId);
+            const userName = user ? user.name : "Unknown User";
+
+            // Get vehicle name via vehicleId
+            const vehicle = latestData.vehicles.find((v) => v.id === b.vehicleId);
+            const vehicleName = vehicle ? vehicle.name : "Unknown Vehicle";
+
+            return (
+              <tr key={b.id} className="border-t hover:bg-gray-50">
+                <td className="px-4 py-2">{userName}</td>
+                <td className="px-4 py-2">{vehicleName}</td>
+                <td className="px-4 py-2">KSh {b.total?.toLocaleString() || "0"}</td>
+                <td className="px-4 py-2">{b.date || "—"}</td>
+                <td className="px-4 py-2 capitalize text-emerald-600 font-medium">
+                  {b.status || "pending"}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    )}
+  </div>
+)}
           {/* Users */}
           {activeTab === "users" && (
             <div className="bg-white rounded-xl shadow-md p-6">

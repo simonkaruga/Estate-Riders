@@ -47,10 +47,10 @@ const HomePage = ({ onBookingConfirmed }) => {
   };
 
   const tabs = [
-    { value: "all", label: "All Vehicles", icon: "🎯" },
-    { value: "bike", label: "E-Bikes", icon: "🚴" },
-    { value: "scooter", label: "Scooters", icon: "🛴" },
-    { value: "skates", label: "Skates", icon: "⛸️" },
+    { value: "all", label: "All Vehicles"},
+    { value: "bike", label: "E-Bikes"},
+    { value: "scooter", label: "Scooters"},
+    { value: "skates", label: "Skates"},
   ];
 
   return (

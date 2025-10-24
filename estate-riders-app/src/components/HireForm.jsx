@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Bike, Calendar, Clock, MapPin, User, CheckCircle } from "lucide-react";
+import { Bike, Calendar, Clock, MapPin, CheckCircle } from "lucide-react";
+import { apiPost } from "../api"; //  make sure this import exists
 
 const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
   const [bookingDetails, setBookingDetails] = useState({
-    name: "",
     date: "",
     duration: "1",
     location: "Main Gate",
@@ -13,39 +13,60 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
   const [submitted, setSubmitted] = useState(false);
   const [error, setError] = useState("");
 
-  const handleBooking = () => {
+  const handleBooking = async () => {
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
+
     if (!selectedVehicle) {
       setError("Please select a vehicle first.");
       return;
     }
 
-    if (!bookingDetails.name || !bookingDetails.date) {
-      setError("Please fill in your name and booking date.");
+    if (!bookingDetails.date) {
+      setError("Please choose a booking date.");
       return;
     }
 
-    const newBooking = {
-      id: Date.now(),
-      vehicle: selectedVehicle,
-      ...bookingDetails,
-      total: selectedVehicle.price * parseInt(bookingDetails.duration),
-      status: "confirmed",
-      bookedAt: new Date().toISOString(),
-    };
+    if (!loggedInUser) {
+      setError("You must be logged in to book a vehicle.");
+      return;
+    }
 
-    onBookingConfirmed(newBooking);
-    setSubmitted(true);
+    try {
+      const totalCost = selectedVehicle.price * parseInt(bookingDetails.duration);
 
-    // Reset after success
-    setBookingDetails({
-      name: "",
-      date: "",
-      duration: "1",
-      location: "Main Gate",
-    });
+      const newBooking = {
+        id: Date.now().toString(),
+        userId: loggedInUser.id,          // link to user in JSON
+        vehicleId: selectedVehicle.id,    //  link to vehicle in JSON
+        total: totalCost,
+        date: bookingDetails.date,
+        duration: bookingDetails.duration,
+        location: bookingDetails.location,
+        status: "confirmed",
+        createdAt: new Date().toISOString(),
+      };
 
-    setTimeout(() => setSubmitted(false), 2500);
-    setError("");
+      //  Save to JSON server
+      await apiPost("bookings", newBooking);
+
+      // Pass back to parent for UI refresh
+      onBookingConfirmed(newBooking);
+
+      setSubmitted(true);
+      setError("");
+
+      // Reset form after confirmation
+      setBookingDetails({
+        date: "",
+        duration: "1",
+        location: "Main Gate",
+      });
+
+      setTimeout(() => setSubmitted(false), 2500);
+    } catch (err) {
+      console.error("Booking error:", err);
+      setError("Failed to confirm booking. Please try again.");
+    }
   };
 
   return (
@@ -70,7 +91,6 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
       ) : (
         <AnimatePresence mode="wait">
           {submitted ? (
-            // Confirmation State
             <motion.div
               key="success"
               initial={{ opacity: 0, scale: 0.9 }}
@@ -90,7 +110,6 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
               </p>
             </motion.div>
           ) : (
-            //  Booking Form
             <motion.div
               key="form"
               initial={{ opacity: 0 }}
@@ -113,26 +132,6 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
                     KSh {selectedVehicle.price}/hr
                   </p>
                 </div>
-              </div>
-
-              {/* Name Field */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <User size={16} className="inline mr-1 text-emerald-600" />
-                  Your Name *
-                </label>
-                <input
-                  type="text"
-                  value={bookingDetails.name}
-                  onChange={(e) =>
-                    setBookingDetails({
-                      ...bookingDetails,
-                      name: e.target.value,
-                    })
-                  }
-                  placeholder="Enter your full name"
-                  className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
-                />
               </div>
 
               {/* Date Field */}
@@ -214,7 +213,7 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
                   animate={{ opacity: 1 }}
                   className="text-red-600 text-sm font-medium"
                 >
-                   {error}
+                  {error}
                 </motion.div>
               )}
 
@@ -222,9 +221,7 @@ const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
               <div className="bg-gray-50 rounded-lg p-4 flex justify-between items-center">
                 <span className="text-gray-600 font-medium">Total Cost:</span>
                 <span className="text-2xl font-bold text-emerald-600">
-                  KSh{" "}
-                  {selectedVehicle.price *
-                    parseInt(bookingDetails.duration || 1)}
+                  KSh {selectedVehicle.price * parseInt(bookingDetails.duration || 1)}
                 </span>
               </div>
 

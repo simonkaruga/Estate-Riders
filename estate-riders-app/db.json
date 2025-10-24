@@ -1,38 +1,6 @@
 {
   "users": [
-    {
-      "id": "fa3d",
-      "email": "simon@gmail.com",
-      "password": "254",
-      "name": "simon",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-23",
-      "role": "user"
-    },
-    {
-      "id": "698e",
-      "email": "simon@gmial.com",
-      "password": "254",
-      "name": "simon",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-24",
-      "role": "user"
-    },
-    {
-      "id": "1806",
-      "email": "kev@gmail.com",
-      "password": "123",
-      "name": "kev",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-24",
-      "role": "admin"
-    }
+    
   ],
   "vehicles": [
     {
@@ -121,53 +89,6 @@
     }
   ],
   "bookings": [
-    {
-      "id": 1761291496777,
-      "vehicle": {
-        "id": "1",
-        "name": "Electric Mountain Bike",
-        "type": "bike",
-        "price": 150,
-        "rating": 4.8,
-        "image": "🚴",
-        "specs": {
-          "range": "50km",
-          "speed": "25km/h",
-          "weight": "22kg"
-        },
-        "available": true
-      },
-      "name": "kev",
-      "date": "2025-10-24",
-      "duration": "1",
-      "location": "Main Gate",
-      "total": 150,
-      "status": "confirmed",
-      "bookedAt": "2025-10-24T07:38:16.777Z"
-    },
-    {
-      "id": 1761291496777,
-      "vehicle": {
-        "id": "1",
-        "name": "Electric Mountain Bike",
-        "type": "bike",
-        "price": 150,
-        "rating": 4.8,
-        "image": "🚴",
-        "specs": {
-          "range": "50km",
-          "speed": "25km/h",
-          "weight": "22kg"
-        },
-        "available": true
-      },
-      "name": "kev",
-      "date": "2025-10-24",
-      "duration": "1",
-      "location": "Main Gate",
-      "total": 150,
-      "status": "confirmed",
-      "bookedAt": "2025-10-24T07:38:16.777Z"
-    }
+   
   ]
 }

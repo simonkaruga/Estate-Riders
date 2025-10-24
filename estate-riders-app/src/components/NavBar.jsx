@@ -9,7 +9,7 @@ const NavBar = ({ user, onLogout }) => {
     { to: "/about", label: "About" },
   ];
 
-  // ✅ Show admin tab if logged in as admin
+  //  Show admin tab if logged in as admin
   const links = user?.role === "admin"
     ? [...baseLinks, { to: "/admin", label: "Admin" }]
     : baseLinks;

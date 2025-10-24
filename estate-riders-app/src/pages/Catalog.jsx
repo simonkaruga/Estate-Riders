@@ -44,7 +44,7 @@ const CatalogPage = ({ items, onAddItem }) => {
           }}
           className="bg-emerald-500 hover:bg-emerald-600 text-white px-5 py-2 rounded-lg shadow transition"
         >
-          {showAddForm ? 'Close Form' : '➕ Add New Item'}
+          {showAddForm ? 'Close Form' : 'Add New Item'}
         </button>
       </div>
 
