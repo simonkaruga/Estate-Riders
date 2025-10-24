@@ -1,128 +1,124 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { ArrowLeft, Star, MapPin, Clock, Info } from "lucide-react";
 
-const ItemDetails = ({ vehicles, onSelect }) => {
-  const { id } = useParams();
+const ItemDetails = () => {
+  const { id } = useParams(); // get bike ID from URL
   const navigate = useNavigate();
+  const [bike, setBike] = useState(null);
 
-  const vehicle = vehicles.find(v => v.id === parseInt(id));
+  // Temporary sample data (replace with API later)
+  const sampleBikes = [
+    {
+      id: "1",
+      name: "Electric Mountain Bike",
+      type: "bike",
+      price: "kes 2500/day",
+      rating: 4.5,
+      location: "Nairobi Estate",
+      description:
+        "A robust electric mountain bike perfect for off-road adventures and city commuting.",
+      image:
+        "https://example.com/images/electric-mountain-bike.jpg",
+        availability: true,
+    },
+    {
+      id: "2",
+      name: "City Cruiser E-Bike",
+      type: "bike",
+      price: "kes 2000/day",
+      rating: 4.0,
+      location: "Nairobi City Center",
+      description:
+        "A stylish city cruiser e-bike ideal for urban commuting and leisurely rides.",
+      image:
+        "https://example.com/images/city-cruiser-e-bike.jpg",
+      availability: true,
+    },
+    {
+      id: "3",
+      name: "Folding Electric Bike",
+      type: "bike",
+      price: "kes 2200/day",
+      rating: 4.2,
+      location: "Westlands Estate",
+      description:
+        "A compact folding electric bike that is easy to store and perfect for short trips.",
+      image:
+        "https://example.com/images/folding-electric-bike.jpg",
+      availability: false,
+    },
+    {
+      id: "4",
+      name: "Road Bike",
+      type: "bike",
+      price: "kes 3000/day",
+      rating: 4.8,
+      location: "Nairobi CBD",
+      description:
+        "A lightweight road bike designed for speed and efficiency on paved surfaces.",
+      image:
+        "https://example.com/images/road-bike.jpg",
+      availability: true,
+    },
+    {
+      id: "5",
+      name: "Hybrid Bike",
+      type: "bike",
+      price: "kes 2800/day",
+      rating: 4.6,
+      location: "Nairobi West",
+      description:
+        "A versatile hybrid bike suitable for both city commuting and light off-road trails.",
+      image:
+        "https://example.com/images/hybrid-bike.jpg",
+      availability: true,
+    }
+  ];
 
-  if (!vehicle) {
+  useEffect(() => {
+    // Simulate fetching data by ID
+    const foundBike = sampleBikes.find((item) => item.id === id);
+    setBike(foundBike);
+  }, [id]);
+
+  if (!bike) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen text-gray-600">
-        <p className="text-xl mb-4">Vehicle not found</p>
-        <button
-          onClick={() => navigate("/")}
-          className="px-6 py-3 rounded-lg bg-emerald-500 text-white font-semibold shadow hover:bg-emerald-600"
-        >
-          Back to Home
-        </button>
+      <div className="flex justify-center items-center h-screen text-gray-600">
+        Loading bike details...
       </div>
     );
   }
 
-  const handleBookNow = () => {
-    onSelect(vehicle);
-    navigate("/");
-  };
-
   return (
-    <div className="max-w-6xl mx-auto px-4 py-10">
-      {/* Back Button */}
+    <div className="max-w-3xl mx-auto p-6">
       <button
         onClick={() => navigate(-1)}
-        className="flex items-center gap-2 text-emerald-600 font-medium hover:underline mb-6"
+        className="text-blue-600 mb-4 hover:underline"
       >
-        <ArrowLeft size={20} />
-        Back
+        ← Back
       </button>
 
-      {/* Header Section */}
-      <div className="grid md:grid-cols-2 gap-10">
-        {/* Left - Image */}
-        <div className="relative bg-gray-100 rounded-2xl overflow-hidden shadow-md flex items-center justify-center">
-          {vehicle.image?.startsWith("http") ? (
-            <img
-              src={vehicle.image}
-              alt={vehicle.name}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="text-8xl">{vehicle.image}</div>
-          )}
-          {!vehicle.available && (
-            <div className="absolute top-3 right-3 bg-red-500 text-white text-xs px-3 py-1 rounded-full font-semibold">
-              Unavailable
-            </div>
-          )}
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+        <img
+          src={bike.image}
+          alt={bike.name}
+          className="w-full h-64 object-cover"
+        />
+        <div className="p-6">
+          <h1 className="text-2xl font-bold mb-2">{bike.name}</h1>
+          <p className="text-gray-500 mb-4">{bike.location}</p>
+
+          <p className="text-gray-700 mb-4">{bike.description}</p>
+
+          <div className="flex items-center justify-between">
+            <span className="text-lg font-semibold text-green-600">
+              {bike.price}
+            </span>
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700">
+              Rent Now
+            </button>
+          </div>
         </div>
-
-        {/* Right - Info */}
-        <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">
-            {vehicle.name}
-          </h1>
-
-          <div className="flex items-center gap-2 mb-4">
-            <Star className="text-yellow-500" />
-            <span className="font-semibold">{vehicle.rating}/5</span>
-            <span className="text-gray-400">•</span>
-            <span className="text-gray-600 capitalize">{vehicle.type}</span>
-          </div>
-
-          <p className="text-gray-600 leading-relaxed mb-6">
-            Experience the thrill of eco-friendly mobility with the {vehicle.name}! 
-            Whether you're cruising around the estate or heading to your next workout, 
-            this {vehicle.type} offers top performance, comfort, and efficiency.
-          </p>
-
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="flex items-center gap-2 text-gray-700">
-              <MapPin size={18} className="text-emerald-600" />
-              <span>{vehicle.location}</span>
-            </div>
-            <div className="flex items-center gap-2 text-gray-700">
-              <Clock size={18} className="text-emerald-600" />
-              <span>${vehicle.price}/hr</span>
-            </div>
-          </div>
-
-          <div className="bg-gray-50 p-4 rounded-lg mb-6">
-            <div className="flex items-start gap-3">
-              <Info size={20} className="text-emerald-600 mt-1" />
-              <p className="text-gray-600 text-sm">
-                All rides include complimentary safety gear and maintenance support.
-                Please ensure you have your ID when picking up the vehicle.
-              </p>
-            </div>
-          </div>
-
-          <button
-            onClick={handleBookNow}
-            disabled={!vehicle.available}
-            className={`w-full py-3.5 text-white font-semibold rounded-lg transition shadow-lg ${
-              vehicle.available
-                ? "bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-          >
-            {vehicle.available ? "Book Now" : "Currently Unavailable"}
-          </button>
-        </div>
-      </div>
-
-      {/* Description Section */}
-      <div className="mt-12 bg-white p-8 rounded-2xl shadow-sm">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Vehicle Features</h2>
-        <ul className="grid sm:grid-cols-2 md:grid-cols-3 gap-3 text-gray-700">
-          <li>Eco-efficient electric motor</li>
-          <li>Long battery life (up to 50km)</li>
-          <li>Ergonomic comfort seat</li>
-          <li>Smart dashboard controls</li>
-          <li>Anti-slip tires</li>
-          <li>Includes maintenance & support</li>
-        </ul>
       </div>
     </div>
   );
