@@ -3,7 +3,7 @@ import { NavLink} from "react-router-dom";
 import { Zap, Menu } from "lucide-react";
 
 const NavBar = ({ user, onLogout }) => {
-  // Define the navigation links
+ 
 
   const links = [
     { to: "/home", label: "Home" },
