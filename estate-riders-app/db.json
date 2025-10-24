@@ -1,6 +1,16 @@
 {
   "users": [
-    
+    {
+      "id": "3cbe",
+      "email": "kev@gmail.com",
+      "password": "123",
+      "name": "kev",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-24",
+      "role": "admin"
+    }
   ],
   "vehicles": [
     {
@@ -89,6 +99,38 @@
     }
   ],
   "bookings": [
-   
+    {
+      "id": "1761301995819",
+      "userId": "3cbe",
+      "vehicleId": "1",
+      "total": 150,
+      "date": "2025-10-24",
+      "duration": "1",
+      "location": "Main Gate",
+      "status": "confirmed",
+      "createdAt": "2025-10-24T10:33:15.819Z"
+    },
+    {
+      "id": "1761301995819",
+      "userId": "3cbe",
+      "vehicleId": "1",
+      "total": 150,
+      "date": "2025-10-24",
+      "duration": "1",
+      "location": "Main Gate",
+      "status": "confirmed",
+      "createdAt": "2025-10-24T10:33:15.819Z"
+    },
+    {
+      "id": "1761301995819",
+      "userId": "3cbe",
+      "vehicleId": "1",
+      "total": 150,
+      "date": "2025-10-24",
+      "duration": "1",
+      "location": "Main Gate",
+      "status": "confirmed",
+      "createdAt": "2025-10-24T10:33:15.819Z"
+    }
   ]
 }

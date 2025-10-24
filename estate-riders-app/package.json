@@ -1,6 +1,7 @@
 {
-  "name": "estate-riders-app",
-  "version": "0.1.0",
+  "name": "estate-riders-backend",
+  "version": "1.0.0",
+  "license": "MIT",
   "private": true,
   "dependencies": {
     "@tailwindcss/vite": "^4.1.15",
@@ -20,11 +21,11 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "json-server --watch db.json --port 3001",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "server": "json-server --watch db.json --port 3001"
+    "eject": "react-scripts eject"
+    
   },
   "eslintConfig": {
     "extends": [
