@@ -39,7 +39,7 @@ const ItemCard = ({ vehicle, item, isSelected, onSelect, onClick }) => {
 
       <div className="mt-2 flex items-center justify-between">
         <span className="text-emerald-600 font-semibold">
-          ${data.price ?? "N/A"}/hr
+          Ksh{data.price ?? "N/A"}/hr
         </span>
         <button
           className={`text-sm px-3 py-1 rounded-lg ${
