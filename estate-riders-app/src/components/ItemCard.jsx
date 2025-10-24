@@ -1,68 +1,57 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { Battery, Clock, MapPin } from "lucide-react";
 
-const ItemCard = ({ vehicle, isSelected, onSelect }) => {
+const ItemCard = ({ vehicle, item, isSelected, onSelect, onClick }) => {
+  // Allow for either "vehicle" or "item" prop
+  const data = vehicle || item;
+
+  if (!data) return null; // Prevent crashes
+
+  const fallbackImage =
+    "https://via.placeholder.com/300x200.png?text=No+Image";
+
+  const imageSrc = data.image
+    ? data.image.startsWith("http")
+      ? data.image
+      : `${process.env.PUBLIC_URL}${data.image}`
+    : fallbackImage;
+
   return (
-    <motion.div
-      whileHover={{ scale: 1.02 }}
-      className={`rounded-2xl shadow-md transition-all cursor-pointer overflow-hidden border-2 ${
-        isSelected
-          ? "border-emerald-600 shadow-lg bg-emerald-50"
-          : "border-transparent bg-white hover:shadow-lg"
+    <div
+      onClick={() => {
+        if (onSelect) onSelect(data);
+        if (onClick) onClick(data);
+      }}
+      className={`cursor-pointer border rounded-xl shadow-md p-4 bg-white hover:shadow-lg transition transform hover:-translate-y-1 ${
+        isSelected ? "border-emerald-500 ring-2 ring-emerald-300" : "border-gray-200"
       }`}
-      onClick={() => onSelect(vehicle)}
     >
-      {/* Image */}
-      <div className="relative">
+      <div className="aspect-w-16 aspect-h-9 mb-4">
         <img
-          src={vehicle.image}
-          alt={vehicle.name}
-          className="w-full h-56 object-cover"
+          src={imageSrc}
+          alt={data.name}
+          className="w-full h-48 object-cover rounded-lg"
+          onError={(e) => (e.target.src = fallbackImage)}
         />
-        <div className="absolute top-3 right-3 bg-emerald-600 text-white text-sm font-semibold px-3 py-1 rounded-full shadow-md">
-          {vehicle.type.toUpperCase()}
-        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-5 space-y-3">
-        <h3 className="text-xl font-bold text-gray-800">{vehicle.name}</h3>
-        <p className="text-gray-600 text-sm leading-relaxed">
-          {vehicle.description || "Experience a smooth and quiet ride."}
-        </p>
+      <h3 className="text-lg font-bold text-gray-800">{data.name}</h3>
+      <p className="text-sm text-gray-500 capitalize">{data.type}</p>
 
-        {/* Stats */}
-        <div className="flex items-center justify-between text-sm text-gray-600 mt-3">
-          <div className="flex items-center gap-2">
-            <Battery size={18} className="text-emerald-600" />
-            <span>{vehicle.range || "20 km range"}</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <Clock size={18} className="text-emerald-600" />
-            <span>{vehicle.duration || "Per hour"}</span>
-          </div>
-        </div>
-
-        {/* Price & Location */}
-        <div className="flex items-center justify-between mt-4">
-          <div className="text-lg font-semibold text-emerald-700">
-            KSh {vehicle.price}/hr
-          </div>
-          <div className="flex items-center gap-1 text-gray-500 text-sm">
-            <MapPin size={16} />
-            <span>{vehicle.location || "Estate Central"}</span>
-          </div>
-        </div>
+      <div className="mt-2 flex items-center justify-between">
+        <span className="text-emerald-600 font-semibold">
+          ${data.price ?? "N/A"}/hr
+        </span>
+        <button
+          className={`text-sm px-3 py-1 rounded-lg ${
+            isSelected
+              ? "bg-emerald-500 text-white"
+              : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+          }`}
+        >
+          {isSelected ? "Selected" : "View"}
+        </button>
       </div>
-
-      {/* Select Indicator */}
-      {isSelected && (
-        <div className="bg-emerald-600 text-white text-center py-2 font-semibold">
-          Selected 
-        </div>
-      )}
-    </motion.div>
+    </div>
   );
 };
 
