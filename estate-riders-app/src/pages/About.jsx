@@ -58,7 +58,7 @@ const About = () => {
     {
       name: 'SIMON KARUGA',
       role: 'Founder & CEO',
-      image: '👩‍💼',
+      image: <img src='/images/simon.jpeg' alt='simon' className="w-24 h-24 rounded-full object-cover" />,
       bio: '10+ years in sustainable mobility'
     },
     {
