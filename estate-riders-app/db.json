@@ -99,60 +99,6 @@
     }
   ],
   "bookings": [
-    {
-      "id": "1761317325612",
-      "userId": "3cbe",
-      "vehicleId": "1",
-      "total": 150,
-      "date": "2025-10-24",
-      "duration": "1",
-      "location": "Main Gate",
-      "status": "confirmed",
-      "createdAt": "2025-10-24T14:48:45.612Z"
-    },
-    {
-      "id": "1761317339470",
-      "userId": "3cbe",
-      "vehicleId": "6",
-      "total": 90,
-      "date": "2025-10-24",
-      "duration": "1",
-      "location": "Main Gate",
-      "status": "confirmed",
-      "createdAt": "2025-10-24T14:48:59.470Z"
-    },
-    {
-      "id": "1761317353448",
-      "userId": "3cbe",
-      "vehicleId": "6",
-      "total": 90,
-      "date": "2025-10-30",
-      "duration": "1",
-      "location": "Main Gate",
-      "status": "confirmed",
-      "createdAt": "2025-10-24T14:49:13.448Z"
-    },
-    {
-      "id": "1761317362658",
-      "userId": "3cbe",
-      "vehicleId": "1",
-      "total": 150,
-      "date": "2025-10-03",
-      "duration": "1",
-      "location": "Main Gate",
-      "status": "confirmed",
-      "createdAt": "2025-10-24T14:49:22.658Z"
-    },
-    {
-      "id": "1761317381490",
-      "userId": "3cbe",
-      "vehicleId": "5",
-      "total": 70,
-      "date": "2025-10-31",
-      "duration": "1",
-      "location": "Main Gate",
-      "status": "confirmed",
-      "createdAt": "2025-10-24T14:49:41.490Z"
-    }
+ 
   ]
 }
