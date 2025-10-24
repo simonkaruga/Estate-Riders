@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
-import { apiGet, apiPost, apiPatch, apiDelete } from "./api";
+import { apiGet, apiPost, apiPatch, apiDelete } from "./api.js";
 
-import Login from "./pages/LogIn";
-import Home from "./pages/Home";
-import About from "./pages/About";
-import CatalogPage from "./pages/Catalog";
-import ItemDetails from "./pages/ItemDetails";
-import AdminDashboard from "./pages/Admin";
-import NavBar from "./components/NavBar";
+import Login from "./pages/LogIn.jsx";
+import Home from "./pages/Home.jsx";
+import About from "./pages/About.jsx";
+import CatalogPage from "./pages/Catalog.jsx";
+import ItemDetails from "./pages/ItemDetails.jsx";
+import AdminDashboard from "./pages/Admin.jsx";
+import NavBar from "./components/NavBar.jsx";
 
 function App() {
   const navigate = useNavigate();
