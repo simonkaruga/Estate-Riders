@@ -49,49 +49,42 @@ const ItemDetails = ({ vehicles, onBookNow, currentUser }) => {
   };
 
   const handleBookNow = async () => {
-    //  CRITICAL: Block if booking already in progress
-    if (bookingInProgress.current) {
-      console.log(" Booking already in progress, blocked duplicate");
-      return;
+  if (bookingInProgress.current) return;
+
+  if (!currentUser) {
+    displayToast("Please log in to make a booking.", "error");
+    return;
+  }
+
+  bookingInProgress.current = true;
+
+  try {
+    const booking = {
+      userId: String(currentUser.id),       // Force string
+      vehicleId: String(item.id),           // Force string
+      vehicleName: item.name,
+      date: new Date().toISOString().split("T")[0], // YYYY-MM-DD
+      duration: "1",
+      total: item.price,
+      status: "confirmed",                  // Matches your db
+      createdAt: new Date().toISOString(),
+    };
+
+    if (onBookNow) {
+      await onBookNow(booking);
+    } else {
+      throw new Error("Booking function not available");
     }
+  } catch (err) {
+    console.error("Booking error:", err);
+    displayToast(err.message || "Booking failed.", "error");
+  } finally {
+    setTimeout(() => {
+      bookingInProgress.current = false;
+    }, 3000);
+  }
+};
 
-    if (!currentUser) {
-      displayToast("Please log in to make a booking.", "error");
-      return;
-    }
-
-    //  Lock immediately
-    bookingInProgress.current = true;
-
-    try {
-      const booking = {
-        userId: currentUser.id,
-        vehicleId: item.id,
-        vehicleName: item.name,
-        date: new Date().toISOString().split("T")[0],
-        duration: 1,
-        totalPrice: item.price,
-        status: "active",
-        createdAt: new Date().toISOString(),
-      };
-
-      // Call parent booking handler (goes to App.jsx)
-      if (onBookNow) {
-        await onBookNow(booking);
-        // Don't show toast here - App.jsx handles it
-      } else {
-        throw new Error("Booking function not available");
-      }
-    } catch (err) {
-      console.error(" Booking error:", err);
-      displayToast(err.message || "Booking failed.", "error");
-    } finally {
-      // Release lock after 3 seconds
-      setTimeout(() => {
-        bookingInProgress.current = false;
-      }, 3000);
-    }
-  };
 
   const imageSrc = item.image
     ? item.image.startsWith("http")

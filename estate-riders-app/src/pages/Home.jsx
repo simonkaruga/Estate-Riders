@@ -33,33 +33,31 @@ const HomePage = ({ onBookingConfirmed, currentUser }) => {
   );
 
   // Wrapper to prevent multiple submissions
-  const handleBookingConfirmed = async (booking) => {
-    // CRITICAL: Block if already submitting
-    if (submitting.current) {
-      console.log("⚠️ Submission blocked - already processing");
-      return;
+const handleBookingConfirmed = async (booking) => {
+  if (submitting.current) return;
+  submitting.current = true;
+
+  try {
+    // Ensure IDs are strings
+    booking.userId = String(currentUser.id);
+    booking.vehicleId = String(booking.vehicleId);
+    booking.date = new Date(booking.date).toISOString().split("T")[0];
+    booking.status = "confirmed"; // Ensure matches your db
+
+    if (onBookingConfirmed) {
+      await onBookingConfirmed(booking);
     }
 
-    // Lock immediately
-    submitting.current = true;
+    setSelectedVehicle(null);
+  } catch (err) {
+    console.error("Booking submission failed:", err);
+  } finally {
+    setTimeout(() => {
+      submitting.current = false;
+    }, 3000);
+  }
+};
 
-    try {
-      //  Pass to parent handler (App.jsx)
-      if (onBookingConfirmed) {
-        await onBookingConfirmed(booking);
-      }
-      
-      // Clear selection only after successful booking
-      setSelectedVehicle(null);
-    } catch (err) {
-      console.error(" Booking submission failed:", err);
-    } finally {
-      //  Release after 3 seconds
-      setTimeout(() => {
-        submitting.current = false;
-      }, 3000);
-    }
-  };
 
   const tabs = [
     { value: "all", label: "All Vehicles"},

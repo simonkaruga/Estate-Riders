@@ -120,65 +120,59 @@ function App() {
   // BOOKINGS - SINGLE BOOKING ONLY
   // =====================================================
   const addBooking = async (booking) => {
-    // CRITICAL: Prevent any concurrent booking attempts
-    if (bookingLock.current) {
-      console.log(" Booking in progress, ignoring duplicate request");
+  if (bookingLock.current) return;
+  bookingLock.current = true;
+
+  try {
+    const freshBookings = await apiGet("bookings");
+
+    console.log("Current booking:", booking);
+    console.log("Fresh bookings from server:", freshBookings);
+
+    const duplicateExists = freshBookings.some(
+       (b) =>
+      b.userId === booking.userId &&
+      b.vehicleId === booking.vehicleId &&
+      b.date === booking.date
+        );
+
+    if (duplicateExists) {
+      console.log("Duplicate detected!");
+      showToast("You already booked this item for this date.", "error");
       return;
     }
 
-    // Lock immediately before any async operations
-    bookingLock.current = true;
+    const activeBookingExists = freshBookings.some(
+       (b) =>
+       b.userId === booking.userId &&
+       b.vehicleId === booking.vehicleId &&
+      b.status !== "cancelled" &&
+      b.status !== "completed"
+        );
 
-    try {
-      //  STEP 1: Fetch fresh bookings data from server
-      const freshBookings = await apiGet("bookings");
-      
-      // STEP 2: Check for duplicates in fresh data
-      const duplicateExists = freshBookings.some(
-        (b) =>
-          String(b.userId) === String(booking.userId) &&
-          String(b.vehicleId) === String(booking.vehicleId) &&
-          b.date === booking.date
-      );
-
-      if (duplicateExists) {
-        showToast("You already booked this item for this date.", "error");
-        return;
-      }
-
-      //  STEP 3: Check for any active booking for same vehicle
-      const activeBookingExists = freshBookings.some(
-        (b) =>
-          String(b.userId) === String(booking.userId) &&
-          String(b.vehicleId) === String(booking.vehicleId) &&
-          b.status !== "cancelled" &&
-          b.status !== "completed"
-      );
-
-      if (activeBookingExists) {
-        showToast("You already have an active booking for this vehicle.", "error");
-        return;
-      }
-
-      //  STEP 4: Create the booking (single API call)
-      const savedBooking = await apiPost("bookings", booking);
-      
-      //  STEP 5: Update local state with the saved booking
-      setBookings((prev) => [...prev, savedBooking]);
-
-      //  STEP 6: Show success message
-      showToast("Booking confirmed successfully!");
-
-    } catch (err) {
-      console.error("Booking error:", err);
-      showToast("Booking failed. Please try again.", "error");
-    } finally {
-      // STEP 7: Release lock after 2 seconds
-      setTimeout(() => {
-        bookingLock.current = false;
-      }, 2000);
+    if (activeBookingExists) {
+      console.log("Active booking exists!");
+      showToast("You already have an active booking for this vehicle.", "error");
+      return;
     }
-  };
+
+    // Create booking
+    const savedBooking = await apiPost("bookings", {
+      ...booking,
+      status: "pending",
+      createdAt: new Date().toISOString(),
+    });
+
+    setBookings((prev) => [...prev, savedBooking]);
+    showToast("Booking confirmed successfully!");
+  } catch (err) {
+    console.error("Booking error:", err);
+    showToast("Booking failed. Please try again.", "error");
+  } finally {
+    bookingLock.current = false;
+  }
+};
+
 
   // =====================================================
   // CANCEL BOOKING
