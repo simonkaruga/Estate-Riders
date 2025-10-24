@@ -1,6 +1,16 @@
 {
   "users": [
     {
+      "id": "e7d3",
+      "email": "kev@gmail.com",
+      "password": "123",
+      "name": "kev",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-22"
+    },
+    {
       "id": "fa3d",
       "email": "simon@gmail.com",
       "password": "254",
@@ -23,10 +33,21 @@
       "role": "user"
     },
     {
-      "id": "1806",
-      "email": "kev@gmail.com",
+      "id": "2ac6",
+      "email": "admin@simon.com",
       "password": "123",
-      "name": "kev",
+      "name": "admin",
+      "totalBookings": 0,
+      "totalSpent": 0,
+      "status": "active",
+      "joinDate": "2025-10-24",
+      "role": "user"
+    },
+    {
+      "id": "8d2f",
+      "email": "simon@hotmail.com",
+      "password": "123",
+      "name": "simon",
       "totalBookings": 0,
       "totalSpent": 0,
       "status": "active",
@@ -39,7 +60,7 @@
       "id": "1",
       "name": "Electric Mountain Bike",
       "type": "bike",
-      "price": 150,
+      "price": 15,
       "rating": 4.8,
       "image": "🚴",
       "specs": {
@@ -53,7 +74,7 @@
       "id": "2",
       "name": "City E-Bike",
       "type": "bike",
-      "price": 120,
+      "price": 12,
       "rating": 4.6,
       "image": "🚲",
       "specs": {
@@ -67,7 +88,7 @@
       "id": "3",
       "name": "Pro Electric Scooter",
       "type": "scooter",
-      "price": 100,
+      "price": 10,
       "rating": 4.7,
       "image": "🛴",
       "specs": {
@@ -81,7 +102,7 @@
       "id": "4",
       "name": "Urban Scooter",
       "type": "scooter",
-      "price": 80,
+      "price": 8,
       "rating": 4.5,
       "image": "🛴",
       "specs": {
@@ -95,7 +116,7 @@
       "id": "5",
       "name": "Electric Roller Skates",
       "type": "skates",
-      "price": 70,
+      "price": 7,
       "rating": 4.4,
       "image": "⛸️",
       "specs": {
@@ -109,7 +130,7 @@
       "id": "6",
       "name": "Pro Inline Skates",
       "type": "skates",
-      "price": 90,
+      "price": 9,
       "rating": 4.6,
       "image": "🛼",
       "specs": {
