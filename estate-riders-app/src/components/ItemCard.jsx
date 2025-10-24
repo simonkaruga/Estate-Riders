@@ -12,7 +12,7 @@ const ItemCard = ({ vehicle, item, isSelected, onSelect, onClick }) => {
   const imageSrc = data.image
     ? data.image.startsWith("http")
       ? data.image
-      : `${process.env.PUBLIC_URL}${data.image}`
+      : `Ksh {process.env.PUBLIC_URL}${data.image}`
     : fallbackImage;
 
   return (

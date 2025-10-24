@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LayoutDashboard,
   Bike,
@@ -7,15 +7,14 @@ import {
   Settings,
   TrendingUp,
   Plus,
-  Trash2,
   X,
   Save,
-  Eye,
   Bell,
-  LogOut,
   Menu
 } from "lucide-react";
+import { apiGet } from "../api";
 
+// ✅ Modal for vehicle add/edit
 const VehicleModal = ({ vehicle, onSave, onClose }) => {
   const [formData, setFormData] = useState(
     vehicle || {
@@ -81,7 +80,7 @@ const VehicleModal = ({ vehicle, onSave, onClose }) => {
 
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                Price (per hour)
+                Price (KSh per hour)
               </label>
               <input
                 type="number"
@@ -105,23 +104,6 @@ const VehicleModal = ({ vehicle, onSave, onClose }) => {
                 <option value="available">Available</option>
                 <option value="rented">Rented</option>
                 <option value="maintenance">Maintenance</option>
-              </select>
-            </div>
-
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Condition
-              </label>
-              <select
-                value={formData.condition}
-                onChange={(e) =>
-                  setFormData({ ...formData, condition: e.target.value })
-                }
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-emerald-500"
-              >
-                <option value="excellent">Excellent</option>
-                <option value="good">Good</option>
-                <option value="fair">Fair</option>
               </select>
             </div>
 
@@ -181,24 +163,46 @@ const VehicleModal = ({ vehicle, onSave, onClose }) => {
   );
 };
 
+// ✅ Main Admin Dashboard
 export default function AdminDashboard({
   vehicles = [],
   bookings = [],
   users = [],
   onSaveVehicle,
   onDeleteVehicle,
-  onUpdateBooking,
 }) {
   const [activeTab, setActiveTab] = useState("dashboard");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [editingItem, setEditingItem] = useState(null);
 
+  const [latestData, setLatestData] = useState({ vehicles, bookings, users });
+
+  // 🔄 Auto-refresh from JSON Server when data changes
+  useEffect(() => {
+    const refresh = async () => {
+      try {
+        const [v, b, u] = await Promise.all([
+          apiGet("vehicles"),
+          apiGet("bookings"),
+          apiGet("users"),
+        ]);
+        setLatestData({ vehicles: v, bookings: b, users: u });
+      } catch (err) {
+        console.error("Error refreshing admin data:", err);
+      }
+    };
+    refresh();
+
+    const interval = setInterval(refresh, 8000); // auto-refresh every 8s
+    return () => clearInterval(interval);
+  }, [bookings, vehicles]);
+
   const stats = {
-    totalRevenue: bookings.reduce((sum, b) => sum + (b.total || 0), 0),
-    totalBookings: bookings.length,
-    activeVehicles: vehicles.filter((v) => v.status === "available").length,
-    totalUsers: users.length,
+    totalRevenue: latestData.bookings.reduce((sum, b) => sum + (b.total || 0), 0),
+    totalBookings: latestData.bookings.length,
+    activeVehicles: latestData.vehicles.filter((v) => v.status === "available").length,
+    totalUsers: latestData.users.length,
   };
 
   const openModal = (item = null) => {
@@ -250,6 +254,8 @@ export default function AdminDashboard({
             <Menu size={20} />
           </button>
         </div>
+
+        {/* Nav links */}
         <nav className="mt-8">
           {navigation.map((item) => (
             <button
@@ -264,22 +270,18 @@ export default function AdminDashboard({
             </button>
           ))}
         </nav>
-        <div className="absolute bottom-4 left-4 right-4">
-          <button className="w-full flex items-center gap-3 px-4 py-3 hover:bg-white/10 rounded-lg transition">
-            <LogOut size={20} />
-            {sidebarOpen && <span>Logout</span>}
-          </button>
-        </div>
       </aside>
 
-      {/* Dashboard content */}
+      {/* Main content */}
       <main className="flex-1 overflow-y-auto">
         <header className="bg-white shadow-sm p-4 flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-bold text-gray-800">
+            <h2 className="text-2xl font-bold text-gray-800 capitalize">
               {navigation.find((n) => n.id === activeTab)?.name}
             </h2>
-            <p className="text-sm text-gray-600">Manage your estate riders platform</p>
+            <p className="text-sm text-gray-600">
+              Manage your Estate Riders platform
+            </p>
           </div>
           <button className="p-2 hover:bg-gray-100 rounded-lg relative">
             <Bell size={20} />
@@ -287,13 +289,16 @@ export default function AdminDashboard({
           </button>
         </header>
 
-        {/* Dashboard Tabs */}
+        {/* ======= TAB CONTENTS ======= */}
         <div className="p-6">
+          {/* Dashboard */}
           {activeTab === "dashboard" && (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
               <div className="bg-white rounded-xl p-6 shadow-md">
                 <p className="text-gray-600 text-sm mb-1">Total Revenue</p>
-                <p className="text-3xl font-bold text-gray-800">${stats.totalRevenue}</p>
+                <p className="text-3xl font-bold text-gray-800">
+                  KSh {stats.totalRevenue.toLocaleString()}
+                </p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
                 <p className="text-gray-600 text-sm mb-1">Total Bookings</p>
@@ -302,7 +307,7 @@ export default function AdminDashboard({
               <div className="bg-white rounded-xl p-6 shadow-md">
                 <p className="text-gray-600 text-sm mb-1">Active Vehicles</p>
                 <p className="text-3xl font-bold text-gray-800">
-                  {stats.activeVehicles}/{vehicles.length}
+                  {stats.activeVehicles}/{latestData.vehicles.length}
                 </p>
               </div>
               <div className="bg-white rounded-xl p-6 shadow-md">
@@ -312,6 +317,7 @@ export default function AdminDashboard({
             </div>
           )}
 
+          {/* Vehicles */}
           {activeTab === "vehicles" && (
             <div className="space-y-6">
               <div className="flex justify-end">
@@ -323,56 +329,104 @@ export default function AdminDashboard({
                   Add Vehicle
                 </button>
               </div>
-
               <div className="bg-white rounded-xl shadow-md overflow-hidden">
                 <table className="w-full">
                   <thead className="bg-gray-50 border-b">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
-                        Vehicle
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
-                        Type
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
-                        Price
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
-                        Status
-                      </th>
-                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">
-                        Actions
-                      </th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Vehicle</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Type</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Price</th>
+                      <th className="px-6 py-3 text-left text-xs font-semibold text-gray-600 uppercase">Status</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y">
-                    {vehicles.map((v) => (
+                    {latestData.vehicles.map((v) => (
                       <tr key={v.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 font-semibold text-gray-800">
-                          {v.name}
-                        </td>
-                        <td className="px-6 py-4 text-gray-700 capitalize">{v.type}</td>
-                        <td className="px-6 py-4 text-gray-700">${v.price}/hr</td>
-                        <td className="px-6 py-4 text-gray-700">{v.status}</td>
-                        <td className="px-6 py-4 flex gap-2">
-                          <button
-                            onClick={() => openModal(v)}
-                            className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg"
-                          >
-                            <Eye size={18} />
-                          </button>
-                          <button
-                            onClick={() => onDeleteVehicle(v.id)}
-                            className="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-                          >
-                            <Trash2 size={18} />
-                          </button>
-                        </td>
+                        <td className="px-6 py-4 font-semibold">{v.name}</td>
+                        <td className="px-6 py-4 capitalize">{v.type}</td>
+                        <td className="px-6 py-4">KSh {v.price.toLocaleString()}</td>
+                        <td className="px-6 py-4">{v.status}</td>
                       </tr>
                     ))}
                   </tbody>
                 </table>
               </div>
+            </div>
+          )}
+
+          {/* Bookings */}
+          {activeTab === "bookings" && (
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="text-lg font-semibold mb-4">All Bookings</h3>
+              <table className="w-full border">
+                <thead className="bg-gray-50 border-b">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">User</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Vehicle</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Total (KSh)</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Date</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {latestData.bookings.map((b) => (
+                    <tr key={b.id} className="border-t hover:bg-gray-50">
+                      <td className="px-4 py-2">{b.userName || "Unknown"}</td>
+                      <td className="px-4 py-2">{b.vehicleName || "N/A"}</td>
+                      <td className="px-4 py-2">KSh {b.total?.toLocaleString()}</td>
+                      <td className="px-4 py-2">{b.date || "—"}</td>
+                      <td className="px-4 py-2 capitalize">{b.status || "pending"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Users */}
+          {activeTab === "users" && (
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="text-lg font-semibold mb-4">Registered Users</h3>
+              <table className="w-full border">
+                <thead className="bg-gray-50 border-b">
+                  <tr>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Name</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Email</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Role</th>
+                    <th className="px-4 py-2 text-left text-xs font-semibold">Joined</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {latestData.users.map((u) => (
+                    <tr key={u.id} className="border-t hover:bg-gray-50">
+                      <td className="px-4 py-2">{u.name}</td>
+                      <td className="px-4 py-2">{u.email}</td>
+                      <td className="px-4 py-2 capitalize">{u.role}</td>
+                      <td className="px-4 py-2">{u.joinDate}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+
+          {/* Analytics */}
+          {activeTab === "analytics" && (
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="text-lg font-semibold mb-4">Analytics Overview</h3>
+              <p className="text-gray-700">
+                <strong>Total Revenue:</strong> KSh {stats.totalRevenue.toLocaleString()}
+              </p>
+              <p className="text-gray-700">
+                <strong>Total Bookings:</strong> {stats.totalBookings}
+              </p>
+              <p className="text-gray-700">
+                <strong>Average per Booking:</strong>{" "}
+                KSh{" "}
+                {stats.totalBookings
+                  ? Math.round(stats.totalRevenue / stats.totalBookings).toLocaleString()
+                  : 0}
+              </p>
             </div>
           )}
         </div>

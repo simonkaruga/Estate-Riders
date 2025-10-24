@@ -120,5 +120,54 @@
       "available": true
     }
   ],
-  "bookings": []
+  "bookings": [
+    {
+      "id": 1761291496777,
+      "vehicle": {
+        "id": "1",
+        "name": "Electric Mountain Bike",
+        "type": "bike",
+        "price": 150,
+        "rating": 4.8,
+        "image": "🚴",
+        "specs": {
+          "range": "50km",
+          "speed": "25km/h",
+          "weight": "22kg"
+        },
+        "available": true
+      },
+      "name": "kev",
+      "date": "2025-10-24",
+      "duration": "1",
+      "location": "Main Gate",
+      "total": 150,
+      "status": "confirmed",
+      "bookedAt": "2025-10-24T07:38:16.777Z"
+    },
+    {
+      "id": 1761291496777,
+      "vehicle": {
+        "id": "1",
+        "name": "Electric Mountain Bike",
+        "type": "bike",
+        "price": 150,
+        "rating": 4.8,
+        "image": "🚴",
+        "specs": {
+          "range": "50km",
+          "speed": "25km/h",
+          "weight": "22kg"
+        },
+        "available": true
+      },
+      "name": "kev",
+      "date": "2025-10-24",
+      "duration": "1",
+      "location": "Main Gate",
+      "total": 150,
+      "status": "confirmed",
+      "bookedAt": "2025-10-24T07:38:16.777Z"
+    }
+  ]
 }
