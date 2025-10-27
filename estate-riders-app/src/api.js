@@ -1,6 +1,6 @@
 // Handles switching between local JSON Server and hosted Render API
 const LOCAL_BASE_URL = "http://localhost:3001/api";
-const REMOTE_BASE_URL = "https://estate-riders-1.onrender.com/api"; // 🔹 replace with your Render URL
+const REMOTE_BASE_URL = "https://estate-riders-1.onrender.com/api"; //  Render URL
 
 // Dynamically detect if local JSON server is running
 export async function getBaseURL() {
