@@ -23,9 +23,7 @@ function App() {
   const bookingLock = useRef(false);
   const [toast, setToast] = useState(null);
 
-  // =====================================================
   // INITIAL LOAD (Fetch users, vehicles, bookings)
-  // =====================================================
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -47,25 +45,19 @@ function App() {
     loadData();
   }, []);
 
-  // =====================================================
   // RESTORE USER SESSION
-  // =====================================================
   useEffect(() => {
     const savedUser = localStorage.getItem("user");
     if (savedUser) setUser(JSON.parse(savedUser));
   }, []);
 
-  // =====================================================
   // TOAST MESSAGE HELPER
-  // =====================================================
   const showToast = (message, type = "success") => {
     setToast({ message, type });
     setTimeout(() => setToast(null), 4000);
   };
 
-  // =====================================================
   // LOGIN / SIGNUP
-  // =====================================================
   const handleLogin = async ({ email, password }) => {
     try {
       const usersData = await apiGet("users");
@@ -117,9 +109,7 @@ function App() {
     navigate("/login");
   };
 
-  // =====================================================
   // BOOKINGS - SINGLE BOOKING ONLY
-  // =====================================================
   const addBooking = async (booking) => {
     // CRITICAL: Prevent any concurrent booking attempts
     if (bookingLock.current) {
@@ -181,9 +171,7 @@ function App() {
     }
   };
 
-  // =====================================================
   // CANCEL BOOKING
-  // =====================================================
   const cancelBooking = async (id) => {
     try {
       await apiDelete("bookings", id);
@@ -195,9 +183,8 @@ function App() {
     }
   };
 
-  // =====================================================
+ 
   // VEHICLES CRUD
-  // =====================================================
   const addOrUpdateVehicle = async (vehicle, editingId = null) => {
     try {
       if (editingId) {
@@ -225,9 +212,7 @@ function App() {
     }
   };
 
-  // =====================================================
   // LOADING SCREEN WITH ANIMATION
-  // =====================================================
   if (loading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
@@ -261,9 +246,7 @@ function App() {
     );
   }
 
-  // =====================================================
   // ROUTES
-  // =====================================================
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative">
       <NavBar user={user} onLogout={handleLogout} />
