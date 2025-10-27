@@ -6,7 +6,7 @@ const LogIn = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isSignup, setIsSignup] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false); // ✅ admin toggle
+  const [isAdmin, setIsAdmin] = useState(false); // admin toggle
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -38,7 +38,7 @@ const LogIn = ({ onLogin }) => {
           totalSpent: 0,
           status: 'active',
           joinDate: new Date().toISOString().split('T')[0],
-          role: isAdmin ? 'admin' : 'user', // ✅ dynamic role
+          role: isAdmin ? 'admin' : 'user', // dynamic role
         };
 
         await apiPost('users', newUser);
@@ -67,7 +67,7 @@ const LogIn = ({ onLogin }) => {
       }
     } catch (error) {
       console.error('Login/Signup error:', error);
-      alert('⚠️ Failed to connect to the server. Please ensure JSON Server or API is running.');
+      alert('Failed to connect to the server. Please ensure JSON Server or API is running.');
     } finally {
       setLoading(false);
     }
@@ -111,7 +111,7 @@ const LogIn = ({ onLogin }) => {
             />
           </div>
 
-          {/* ✅ Admin signup toggle */}
+          {/*  Admin signup toggle */}
           {isSignup && (
             <div className="flex items-center space-x-2">
               <input

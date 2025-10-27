@@ -1,6 +1,6 @@
 // Handles switching between local JSON Server and hosted Render API
-const LOCAL_BASE_URL = "http://localhost:3001";
-const REMOTE_BASE_URL = "https://your-render-app.onrender.com"; // 🔹 replace with your Render URL
+const LOCAL_BASE_URL = "http://localhost:3001/api";
+const REMOTE_BASE_URL = "https://estate-riders-1.onrender.com/api"; //  Render URL
 
 // Dynamically detect if local JSON server is running
 export async function getBaseURL() {
@@ -8,13 +8,13 @@ export async function getBaseURL() {
     // JSON Server always exposes /users, so we can test that
     const res = await fetch(`${LOCAL_BASE_URL}/users`, { method: "GET" });
     if (res.ok) {
-      console.log("✅ Using local JSON Server:", LOCAL_BASE_URL);
+      console.log("Using local JSON Server:", LOCAL_BASE_URL);
       return LOCAL_BASE_URL;
     }
   } catch (err) {
-    console.warn("⚠️ Local JSON Server not reachable. Switching to remote API.");
+    console.warn("Local JSON Server not reachable. Switching to remote API.");
   }
-  console.log("🌐 Using remote API:", REMOTE_BASE_URL);
+  console.log("Using remote API:", REMOTE_BASE_URL);
   return REMOTE_BASE_URL;
 }
 

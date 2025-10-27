@@ -1,59 +1,6 @@
 {
   "users": [
-    {
-      "id": "e7d3",
-      "email": "kev@gmail.com",
-      "password": "123",
-      "name": "kev",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-22"
-    },
-    {
-      "id": "fa3d",
-      "email": "simon@gmail.com",
-      "password": "254",
-      "name": "simon",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-23",
-      "role": "user"
-    },
-    {
-      "id": "698e",
-      "email": "simon@gmial.com",
-      "password": "254",
-      "name": "simon",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-24",
-      "role": "user"
-    },
-    {
-      "id": "2ac6",
-      "email": "admin@simon.com",
-      "password": "123",
-      "name": "admin",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-24",
-      "role": "user"
-    },
-    {
-      "id": "8d2f",
-      "email": "simon@hotmail.com",
-      "password": "123",
-      "name": "simon",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-24",
-      "role": "admin"
-    }
+
   ],
   "vehicles": [
     {
@@ -62,7 +9,7 @@
       "type": "bike",
       "price": 15,
       "rating": 4.8,
-      "image": "🚴",
+      "image": "https://ampdbros.com.au/cdn/shop/files/DSC01449_9e4b5f72-c8ef-4bd3-91fb-2b8289c34845.jpg?v=1720393629&width=1500",
       "specs": {
         "range": "50km",
         "speed": "25km/h",
@@ -76,7 +23,7 @@
       "type": "bike",
       "price": 12,
       "rating": 4.6,
-      "image": "🚲",
+      "image": "https://cikadabikes.com/cdn/shop/files/Citymain_0606.png?v=1758772974&width=600",
       "specs": {
         "range": "40km",
         "speed": "20km/h",
@@ -90,7 +37,7 @@
       "type": "scooter",
       "price": 10,
       "rating": 4.7,
-      "image": "🛴",
+      "image": "https://www.envirorides.co.uk/cdn/shop/files/EVR_Hero_GreenLights.png?v=1705574070&width=1214",
       "specs": {
         "range": "35km",
         "speed": "25km/h",
@@ -104,7 +51,7 @@
       "type": "scooter",
       "price": 8,
       "rating": 4.5,
-      "image": "🛴",
+      "image": "https://urbanscooter.lv/image/cache/catalog/urbans/wp-content/uploads/2018/07/scooter-02-550x550w.png",
       "specs": {
         "range": "25km",
         "speed": "20km/h",
@@ -118,7 +65,7 @@
       "type": "skates",
       "price": 7,
       "rating": 4.4,
-      "image": "⛸️",
+      "image": "https://wheelfeet.com/cdn/shop/files/Wheelfeet-Electric-Roller-Skates-Motorized-Eskates-new-31111.jpg?v=1711461178&width=2048",
       "specs": {
         "range": "15km",
         "speed": "15km/h",
@@ -132,7 +79,7 @@
       "type": "skates",
       "price": 9,
       "rating": 4.6,
-      "image": "🛼",
+      "image": "https://images-na.ssl-images-amazon.com/images/I/818WOxHqYML.jpg",
       "specs": {
         "range": "20km",
         "speed": "18km/h",
@@ -141,5 +88,7 @@
       "available": true
     }
   ],
-  "bookings": []
+  "bookings": [
+ 
+  ]
 }

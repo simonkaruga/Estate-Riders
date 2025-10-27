@@ -70,13 +70,13 @@ const About = () => {
     {
       name: 'PRINCE KIBALI',
       role: 'Head of Operations',
-      image: '👩‍🔧',
+      image: <img src='/images/prince.jpg' alt='Prince' className="w-24 h-24 rounded-full object-cover" />,
       bio: 'Expert in fleet management'
     },
     {
       name: 'CHRIS KABUE',
       role: 'Customer Success Lead',
-      image: '👨‍💼',
+      image: <img src='/images/chris.jpg' alt='Chris' className="w-24 h-24 rounded-full object-cover" />,
       bio: 'Passionate about customer experience'
     }
   ];
@@ -94,9 +94,6 @@ const About = () => {
       {/* Hero Section  */}
       <section className="relative bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-20 overflow-hidden">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-10 left-10 text-9xl">🚴</div>
-          <div className="absolute bottom-10 right-20 text-9xl">🛴</div>
-          <div className="absolute top-1/2 right-1/3 text-7xl">⛸️</div>
         </div>
         <div className="max-w-7xl mx-auto px-4 relative z-10">
           <div className="text-center">
