@@ -9,6 +9,7 @@ import CatalogPage from "./pages/Catalog.jsx";
 import ItemDetails from "./pages/ItemDetails.jsx";
 import AdminDashboard from "./pages/Admin.jsx";
 import NavBar from "./components/NavBar.jsx";
+import { Zap } from "lucide-react";
 
 function App() {
   const navigate = useNavigate();
@@ -120,58 +121,65 @@ function App() {
   // BOOKINGS - SINGLE BOOKING ONLY
   // =====================================================
   const addBooking = async (booking) => {
-  if (bookingLock.current) return;
-  bookingLock.current = true;
-
-  try {
-    const freshBookings = await apiGet("bookings");
-
-    console.log("Current booking:", booking);
-    console.log("Fresh bookings from server:", freshBookings);
-
-    const duplicateExists = freshBookings.some(
-       (b) =>
-      b.userId === booking.userId &&
-      b.vehicleId === booking.vehicleId &&
-      b.date === booking.date
-        );
-
-    if (duplicateExists) {
-      console.log("Duplicate detected!");
-      showToast("You already booked this item for this date.", "error");
+    // ✅ CRITICAL: Prevent any concurrent booking attempts
+    if (bookingLock.current) {
+      console.log("⚠️ Booking in progress, ignoring duplicate request");
       return;
     }
 
-    const activeBookingExists = freshBookings.some(
-       (b) =>
-       b.userId === booking.userId &&
-       b.vehicleId === booking.vehicleId &&
-      b.status !== "cancelled" &&
-      b.status !== "completed"
-        );
+    // ✅ Lock immediately before any async operations
+    bookingLock.current = true;
 
-    if (activeBookingExists) {
-      console.log("Active booking exists!");
-      showToast("You already have an active booking for this vehicle.", "error");
-      return;
+    try {
+      // ✅ STEP 1: Fetch fresh bookings data from server
+      const freshBookings = await apiGet("bookings");
+      
+      // ✅ STEP 2: Check for duplicates in fresh data
+      const duplicateExists = freshBookings.some(
+        (b) =>
+          String(b.userId) === String(booking.userId) &&
+          String(b.vehicleId) === String(booking.vehicleId) &&
+          b.date === booking.date
+      );
+
+      if (duplicateExists) {
+        showToast("You already booked this item for this date.", "error");
+        return;
+      }
+
+      // ✅ STEP 3: Check for any active booking for same vehicle
+      const activeBookingExists = freshBookings.some(
+        (b) =>
+          String(b.userId) === String(booking.userId) &&
+          String(b.vehicleId) === String(booking.vehicleId) &&
+          b.status !== "cancelled" &&
+          b.status !== "completed"
+      );
+
+      if (activeBookingExists) {
+        showToast("You already have an active booking for this vehicle.", "error");
+        return;
+      }
+
+      // ✅ STEP 4: Create the booking (single API call)
+      const savedBooking = await apiPost("bookings", booking);
+      
+      // ✅ STEP 5: Update local state with the saved booking
+      setBookings((prev) => [...prev, savedBooking]);
+
+      // ✅ STEP 6: Show success message
+      showToast("Booking confirmed successfully!");
+
+    } catch (err) {
+      console.error("❌ Booking error:", err);
+      showToast("Booking failed. Please try again.", "error");
+    } finally {
+      // ✅ STEP 7: Release lock after 2 seconds
+      setTimeout(() => {
+        bookingLock.current = false;
+      }, 2000);
     }
-
-    // Create booking
-    const savedBooking = await apiPost("bookings", {
-      ...booking,
-      status: "pending",
-      createdAt: new Date().toISOString(),
-    });
-
-    setBookings((prev) => [...prev, savedBooking]);
-    showToast("Booking confirmed successfully!");
-  } catch (err) {
-    console.error("Booking error:", err);
-    showToast("Booking failed. Please try again.", "error");
-  } finally {
-    bookingLock.current = false;
-  }
-};
+  };
 
   // =====================================================
   // CANCEL BOOKING
@@ -218,12 +226,37 @@ function App() {
   };
 
   // =====================================================
-  // LOADING SCREEN
+  // LOADING SCREEN WITH ANIMATION
   // =====================================================
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen text-gray-600">
-        Loading Estate Riders data...
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+        {/* Logo Animation */}
+        <div className="mb-8 relative">
+          <div className="absolute inset-0 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-full blur-xl opacity-50 animate-pulse"></div>
+          <div className="relative bg-gradient-to-r from-emerald-500 to-teal-500 p-6 rounded-2xl shadow-2xl animate-bounce">
+            <Zap size={48} className="text-white" />
+          </div>
+        </div>
+
+        {/* Loading Text */}
+        <h2 className="text-2xl font-bold text-gray-800 mb-2 animate-pulse">
+          Estate Riders
+        </h2>
+        <p className="text-gray-600 mb-8">Loading your eco-friendly rides...</p>
+
+        {/* Spinner */}
+        <div className="relative w-16 h-16">
+          <div className="absolute inset-0 border-4 border-emerald-200 rounded-full"></div>
+          <div className="absolute inset-0 border-4 border-emerald-500 rounded-full border-t-transparent animate-spin"></div>
+        </div>
+
+        {/* Progress Dots */}
+        <div className="flex gap-2 mt-8">
+          <div className="w-3 h-3 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+          <div className="w-3 h-3 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+          <div className="w-3 h-3 bg-emerald-500 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+        </div>
       </div>
     );
   }
@@ -235,7 +268,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative">
       <NavBar user={user} onLogout={handleLogout} />
 
-      {/* Toast Notification */}
+      {/* ✅ Toast Notification */}
       {toast && (
         <div
           style={{ top: '100px' }}
