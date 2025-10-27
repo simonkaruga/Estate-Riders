@@ -1,17 +1,6 @@
 {
   "users": [
-    {
-      "id": "3cbe",
-      "email": "kev@gmail.com",
-      "password": "123",
-      "name": "kev",
-      "totalBookings": 0,
-      "totalSpent": 0,
-      "status": "active",
-      "joinDate": "2025-10-24",
-      "role": "admin"
-    }
-  ],
+],
   "vehicles": [
     {
       "id": "1",
