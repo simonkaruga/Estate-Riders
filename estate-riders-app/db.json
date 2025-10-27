@@ -1,12 +1,13 @@
 {
   "users": [
-],
+
+  ],
   "vehicles": [
     {
       "id": "1",
       "name": "Electric Mountain Bike",
       "type": "bike",
-      "price": 150,
+      "price": 15,
       "rating": 4.8,
       "image": "https://ampdbros.com.au/cdn/shop/files/DSC01449_9e4b5f72-c8ef-4bd3-91fb-2b8289c34845.jpg?v=1720393629&width=1500",
       "specs": {
@@ -20,7 +21,7 @@
       "id": "2",
       "name": "City E-Bike",
       "type": "bike",
-      "price": 120,
+      "price": 12,
       "rating": 4.6,
       "image": "https://cikadabikes.com/cdn/shop/files/Citymain_0606.png?v=1758772974&width=600",
       "specs": {
@@ -34,7 +35,7 @@
       "id": "3",
       "name": "Pro Electric Scooter",
       "type": "scooter",
-      "price": 100,
+      "price": 10,
       "rating": 4.7,
       "image": "https://www.envirorides.co.uk/cdn/shop/files/EVR_Hero_GreenLights.png?v=1705574070&width=1214",
       "specs": {
@@ -48,7 +49,7 @@
       "id": "4",
       "name": "Urban Scooter",
       "type": "scooter",
-      "price": 80,
+      "price": 8,
       "rating": 4.5,
       "image": "https://urbanscooter.lv/image/cache/catalog/urbans/wp-content/uploads/2018/07/scooter-02-550x550w.png",
       "specs": {
@@ -62,7 +63,7 @@
       "id": "5",
       "name": "Electric Roller Skates",
       "type": "skates",
-      "price": 70,
+      "price": 7,
       "rating": 4.4,
       "image": "https://wheelfeet.com/cdn/shop/files/Wheelfeet-Electric-Roller-Skates-Motorized-Eskates-new-31111.jpg?v=1711461178&width=2048",
       "specs": {
@@ -76,7 +77,7 @@
       "id": "6",
       "name": "Pro Inline Skates",
       "type": "skates",
-      "price": 90,
+      "price": 9,
       "rating": 4.6,
       "image": "https://images-na.ssl-images-amazon.com/images/I/818WOxHqYML.jpg",
       "specs": {
