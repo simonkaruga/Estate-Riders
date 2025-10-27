@@ -121,20 +121,20 @@ function App() {
   // BOOKINGS - SINGLE BOOKING ONLY
   // =====================================================
   const addBooking = async (booking) => {
-    // ✅ CRITICAL: Prevent any concurrent booking attempts
+    // CRITICAL: Prevent any concurrent booking attempts
     if (bookingLock.current) {
-      console.log("⚠️ Booking in progress, ignoring duplicate request");
+      console.log(" Booking in progress, ignoring duplicate request");
       return;
     }
 
-    // ✅ Lock immediately before any async operations
+    // Lock immediately before any async operations
     bookingLock.current = true;
 
     try {
-      // ✅ STEP 1: Fetch fresh bookings data from server
+      // STEP 1: Fetch fresh bookings data from server
       const freshBookings = await apiGet("bookings");
       
-      // ✅ STEP 2: Check for duplicates in fresh data
+      // STEP 2: Check for duplicates in fresh data
       const duplicateExists = freshBookings.some(
         (b) =>
           String(b.userId) === String(booking.userId) &&
@@ -147,7 +147,7 @@ function App() {
         return;
       }
 
-      // ✅ STEP 3: Check for any active booking for same vehicle
+      // STEP 3: Check for any active booking for same vehicle
       const activeBookingExists = freshBookings.some(
         (b) =>
           String(b.userId) === String(booking.userId) &&
@@ -161,20 +161,20 @@ function App() {
         return;
       }
 
-      // ✅ STEP 4: Create the booking (single API call)
+      // STEP 4: Create the booking (single API call)
       const savedBooking = await apiPost("bookings", booking);
       
-      // ✅ STEP 5: Update local state with the saved booking
+      // STEP 5: Update local state with the saved booking
       setBookings((prev) => [...prev, savedBooking]);
 
-      // ✅ STEP 6: Show success message
+      // STEP 6: Show success message
       showToast("Booking confirmed successfully!");
 
     } catch (err) {
-      console.error("❌ Booking error:", err);
+      console.error("Booking error:", err);
       showToast("Booking failed. Please try again.", "error");
     } finally {
-      // ✅ STEP 7: Release lock after 2 seconds
+      // STEP 7: Release lock after 2 seconds
       setTimeout(() => {
         bookingLock.current = false;
       }, 2000);
@@ -268,7 +268,7 @@ function App() {
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 relative">
       <NavBar user={user} onLogout={handleLogout} />
 
-      {/* ✅ Toast Notification */}
+      {/* Toast Notification */}
       {toast && (
         <div
           style={{ top: '100px' }}
