@@ -286,9 +286,10 @@ This project is licensed under the MIT License - see the [LICENSE] file for deta
 ##  Author
 
 **Your Name**
-- GitHub: [@yourusername](https://github.com/yourusername)
-- LinkedIn: [Your Name](https://linkedin.com/in/yourprofile)
-- Email: your.email@example.com
+- SIMON KARUGA : https://github.com/simonkaruga
+- KELVIN JOHNSON : https://github.com/kevrith
+- PRINCE KIBALI : https://github.com/PKMDroid
+- CHRIS KABUE: https://github.com/chriskabue-cmd
 
 
 ##  Acknowledgments
