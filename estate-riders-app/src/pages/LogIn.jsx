@@ -21,7 +21,7 @@ const LogIn = ({ onLogin }) => {
       setLoading(true);
 
       if (isSignup) {
-        // 🔹 Check if user exists
+        // Check if user exists
         const users = await apiGet(`users?email=${encodeURIComponent(email)}`);
         if (users.length > 0) {
           alert('User with this email already exists.');
@@ -29,7 +29,7 @@ const LogIn = ({ onLogin }) => {
           return;
         }
 
-        // 🔹 Create new user (admin or normal)
+        // Create new user (admin or normal)
         const newUser = {
           email,
           password,
@@ -48,7 +48,7 @@ const LogIn = ({ onLogin }) => {
         setPassword('');
         setIsAdmin(false);
       } else {
-        // 🔹 Handle login
+        // Handle login
         const users = await apiGet(
           `users?email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
         );
