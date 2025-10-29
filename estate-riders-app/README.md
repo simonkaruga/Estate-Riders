@@ -114,6 +114,8 @@ A modern, full-stack web application for renting electric bikes, scooters, and s
 6. **Open your browser**
    
    Navigate to `http://localhost:3000`
+   
+   or use the live link: https://estaterider-1.netlify.app/
 
 
 ##  Project Structure
