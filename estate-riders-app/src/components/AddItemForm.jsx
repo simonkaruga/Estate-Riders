@@ -207,7 +207,7 @@ export default function AddItemForm({ initialData = null, onSave, onCancel }) {
           />
           {previewUrl ? (
             <div className="mt-3">
-              {/* if it's an http(s) url, show image; otherwise show text (emoji) */}
+              {/* if it's an http(s) url, show image */}
               {/^https?:\/\//i.test(previewUrl) ? (
                 <img src={previewUrl} alt="preview" className="w-full h-48 object-cover rounded-md border" />
               ) : (

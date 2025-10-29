@@ -14,7 +14,7 @@ import { Zap } from "lucide-react";
 function App() {
   const navigate = useNavigate();
 
-  // 🔹 Global App State
+  //  Global App State
   const [user, setUser] = useState(null);
   const [users, setUsers] = useState([]);
   const [vehicles, setVehicles] = useState([]);

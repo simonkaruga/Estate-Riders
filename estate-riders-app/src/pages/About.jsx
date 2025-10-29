@@ -82,9 +82,9 @@ const About = () => {
   ];
 
   const milestones = [
-    { year: '2021', event: 'Estate Riders founded with 5 e-bikes' },
-    { year: '2022', event: 'Expanded to 10 estates, 30 vehicles' },
-    { year: '2023', event: 'Reached 2,000 active users milestone' },
+    { year: '2021', event: 'Estate Riders founded with 3 e-bikes' },
+    { year: '2022', event: 'Expanded to 3 estates, 10 vehicles' },
+    { year: '2023', event: 'Reached 2,00 active users milestone' },
     { year: '2024', event: 'Introduced scooters and skates' },
     { year: '2025', event: 'Serving 25+ estates, 5,000+ users' }
   ];

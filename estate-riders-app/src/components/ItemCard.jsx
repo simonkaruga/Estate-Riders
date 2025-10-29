@@ -7,7 +7,7 @@ const ItemCard = ({ vehicle, item, isSelected, onSelect, onClick }) => {
   if (!data) return null; // Prevent crashes
 
   const fallbackImage =
-    "https://via.placeholder.com/300x300.png?text=No+Image";
+    "https://via.placeholder.com/300x300.png?text=No+Image"; // Fallback image URL
 
   const imageSrc = data.image
     ? data.image.startsWith("http")

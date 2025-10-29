@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Bike, Calendar, Clock, MapPin, CheckCircle } from "lucide-react";
-import { apiPost } from "../api"; //  make sure this import exists
+import { apiPost } from "../api"; // Import your API helper
+
+// Main component for booking a vehicle
 
 const HireForm = ({ selectedVehicle, onBookingConfirmed }) => {
   const [bookingDetails, setBookingDetails] = useState({
