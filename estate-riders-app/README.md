@@ -109,6 +109,8 @@ A modern, full-stack web application for renting electric bikes, scooters, and s
    npm start
    # or
    yarn start
+   # or 
+   npm run client
    ```
 
 6. **Open your browser**
