@@ -91,6 +91,7 @@ const VehicleModal = ({ vehicle, onSave, onClose }) => {
   );
 };
 
+
 /* ---------- SMALL UI HELPERS ---------- */
 const Input = ({ label, ...props }) => (
   <div>
