@@ -65,7 +65,7 @@ const CatalogPage = ({ items, onAddItem }) => {
         ))}
       </div>
 
-      {/* Conditional Rendering */}
+      {/* Conditional Rendering */ }
       {showAddForm ? (
         <div className="bg-white rounded-xl shadow p-6">
           <AddItemForm onAddItem={handleItemAdded} />
